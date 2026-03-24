@@ -1,0 +1,3699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SparkSheets — NI Curriculum Worksheets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:      #7c3aed;
+      --purple-dark: #5b21b6;
+      --purple-100:  #ede9fe;
+      --purple-50:   #f5f3ff;
+
+      --yellow:      #f59e0b;
+      --yellow-100:  #fef3c7;
+      --yellow-50:   #fffbeb;
+
+      --green:       #059669;
+      --red:         #dc2626;
+
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-400: #9ca3af;
+      --gray-300: #d1d5db;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --gray-50:  #f9fafb;
+      --white:    #ffffff;
+
+      --font-ui:   'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Nunito', -apple-system, sans-serif;
+
+      --radius-sm: 8px;
+      --radius:    12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow:    0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-xl: 0 24px 64px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.05);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: #f7f6f2;
+      color: var(--gray-700);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--purple) 0%, #9333ea 100%);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+
+    .nav-logo-name {
+      font-family: var(--font-ui);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .nav-logo-name .accent { color: var(--purple); }
+
+    .nav-tagline {
+      font-family: var(--font-ui);
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--gray-400);
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    .nav-key-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .nav-key-btn:hover {
+      border-color: var(--purple-100);
+      background: var(--purple-50);
+      color: var(--purple);
+    }
+
+    .nav-key-btn.key-saved {
+      border-color: #a7f3d0;
+      background: #ecfdf5;
+      color: var(--green);
+    }
+
+    /* ── HERO ────────────────────────────────────────── */
+    .hero {
+      padding: 4.5rem 2rem 3rem;
+      text-align: center;
+      background: #f7f6f2;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--purple-50);
+      border: 1px solid var(--purple-100);
+      color: var(--purple);
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .hero h1 {
+      font-family: var(--font-ui);
+      font-size: clamp(2.1rem, 5vw, 3.1rem);
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 .accent { color: var(--purple); }
+
+    .hero-sub {
+      font-family: var(--font-ui);
+      font-size: 1.05rem;
+      color: var(--gray-500);
+      max-width: 460px;
+      margin: 0 auto;
+      line-height: 1.65;
+      font-weight: 400;
+    }
+
+    /* ── CREATOR CARD ─────────────────────────────────── */
+    .creator-wrap {
+      max-width: 740px;
+      margin: 2.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .creator-card {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    .creator-textarea-wrap {
+      padding: 1.75rem 1.75rem 1.25rem;
+    }
+
+    .creator-textarea-wrap textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 0;
+      border: none;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--gray-900);
+      background: transparent;
+      resize: none;
+      line-height: 1.65;
+    }
+
+    .creator-textarea-wrap textarea::placeholder {
+      color: var(--gray-300);
+      font-weight: 400;
+    }
+
+    /* ── OPTIONS BAR ──────────────────────────────────── */
+    .options-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.85rem 1.75rem;
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-100);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .options-bar select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0.38rem 2rem 0.38rem 0.8rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 20px;
+      background: var(--white);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    .options-bar select:hover {
+      border-color: var(--purple-100);
+      background-color: var(--purple-50);
+      color: var(--purple);
+    }
+
+    .options-bar select:focus {
+      border-color: var(--purple);
+      background-color: var(--purple-50);
+      color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+
+    /* ── ACTIONS BAR ──────────────────────────────────── */
+    .actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.75rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .usage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-400);
+    }
+
+    .usage-pill .count { color: var(--purple); font-weight: 700; }
+
+    #generate-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.75rem 1.65rem;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.38);
+    }
+
+    #generate-btn:hover:not(:disabled) {
+      background: var(--purple-dark);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.46);
+      transform: translateY(-1px);
+    }
+
+    #generate-btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+
+    #generate-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── EXAMPLES ─────────────────────────────────────── */
+    .examples-wrap {
+      max-width: 740px;
+      margin: 1.25rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .examples-label {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.55rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.75rem;
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 20px;
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .chip:hover {
+      border-color: var(--purple-100);
+      background: var(--purple-50);
+      color: var(--purple);
+      transform: translateY(-1px);
+    }
+
+    /* ── KEY PANEL ────────────────────────────────────── */
+    .key-panel {
+      display: none;
+      max-width: 740px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .key-panel.open { display: block; }
+
+    .key-panel-inner {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .key-panel-title {
+      font-family: var(--font-ui);
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .key-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .key-row input {
+      flex: 1;
+      padding: 0.6rem 0.9rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: var(--gray-900);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: var(--white);
+    }
+
+    .key-row input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+
+    .key-row input::placeholder { color: var(--gray-300); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.6rem 1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--purple-100);
+      background: var(--purple-50);
+      color: var(--purple);
+    }
+
+    .btn-outline.danger:hover {
+      border-color: #fca5a5;
+      background: #fef2f2;
+      color: var(--red);
+    }
+
+    .key-status {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+    }
+
+    .key-status.saved { color: var(--green); }
+    .key-status.missing { color: var(--red); }
+
+    /* ── USAGE BANNER ─────────────────────────────────── */
+    .usage-limit-banner {
+      display: none;
+      max-width: 740px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .usage-limit-banner.visible { display: block; }
+
+    .usage-limit-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: var(--yellow-50);
+      border: 1.5px solid #fde68a;
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      color: #92400e;
+    }
+
+    .usage-limit-inner strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      color: #78350f;
+    }
+
+    /* ── OUTPUT ───────────────────────────────────────── */
+    #output-section {
+      display: none;
+      max-width: 740px;
+      margin: 3rem auto 0;
+      padding: 0 1.5rem 5rem;
+    }
+
+    .worksheet-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .ws-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--font-ui);
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: var(--gray-600);
+    }
+
+    .ws-toolbar-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--purple);
+      animation: pulse 1.5s ease-in-out infinite;
+      display: none;
+    }
+
+    .ws-toolbar-dot.active { display: block; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.7); }
+    }
+
+    .ws-actions { display: flex; gap: 0.4rem; }
+
+    .btn-sm {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.85rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      font-family: var(--font-ui);
+      font-size: 0.77rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-sm:hover {
+      border-color: var(--purple-100);
+      background: var(--purple-50);
+      color: var(--purple);
+    }
+
+    /* ── WORKSHEET PAPER ──────────────────────────────── */
+    .worksheet-paper {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    .worksheet-paper-header {
+      padding: 1.5rem 2rem;
+      background: var(--gray-50);
+      border-bottom: 1.5px solid var(--gray-100);
+    }
+
+    .ws-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .ws-brand-icon {
+      width: 20px; height: 20px;
+      background: linear-gradient(135deg, var(--purple), #9333ea);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .ws-brand-name {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .ws-fields {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .ws-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .ws-field-label {
+      font-family: var(--font-ui);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray-400);
+    }
+
+    .ws-field-line {
+      width: 180px;
+      height: 1px;
+      background: var(--gray-300);
+    }
+
+    .ws-field.short .ws-field-line { width: 110px; }
+
+    /* ── LOADING SKELETON ─────────────────────────────── */
+    .gen-loading {
+      display: none;
+      padding: 2.25rem 2.25rem 2.5rem;
+    }
+
+    .gen-loading.active { display: block; }
+
+    .skeleton {
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--gray-100) 25%, #f0eef8 50%, var(--gray-100) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite ease-in-out;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .sk-title    { height: 30px; width: 60%; margin-bottom: 0.75rem; }
+    .sk-meta     { height: 13px; width: 42%; margin-bottom: 1.75rem; }
+    .sk-heading  { height: 11px; width: 28%; margin-bottom: 0.65rem; margin-top: 1rem; }
+    .sk-line     { height: 11px; margin-bottom: 0.5rem; }
+    .sk-full     { width: 100%; }
+    .sk-lg       { width: 85%; }
+    .sk-md       { width: 68%; }
+    .sk-sm       { width: 50%; }
+
+    .gen-loading-label {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gray-400);
+      margin-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── OUTPUT CONTENT ───────────────────────────────── */
+    #output {
+      padding: 2.25rem 2.25rem 2.5rem;
+      font-family: var(--font-body);
+      font-size: 0.975rem;
+      color: var(--gray-700);
+      line-height: 1.8;
+      min-height: 160px;
+    }
+
+    #output h1 {
+      font-family: var(--font-ui);
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.025em;
+      margin-bottom: 0.3rem;
+      margin-top: 0;
+      line-height: 1.2;
+    }
+
+    #output h2 {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--purple-dark);
+      margin-top: 2.2em;
+      margin-bottom: 0.7em;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid var(--purple-100);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    #output h3 {
+      font-family: var(--font-ui);
+      font-size: 0.925rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-top: 1.5em;
+      margin-bottom: 0.4em;
+    }
+
+    #output h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-top: 1.25em;
+      margin-bottom: 0.35em;
+    }
+
+    #output p { margin-bottom: 0.85em; }
+
+    #output ul, #output ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1em;
+    }
+
+    #output li { margin-bottom: 0.4em; }
+
+    #output ul li::marker { color: var(--purple); }
+    #output ol li::marker { color: var(--purple); font-weight: 700; }
+
+    #output strong { font-weight: 800; color: var(--gray-900); }
+    #output em { font-style: italic; color: var(--gray-500); }
+
+    #output hr {
+      border: none;
+      border-top: 1.5px dashed var(--gray-200);
+      margin: 2em 0;
+    }
+
+    #output blockquote {
+      border: 1.5px solid var(--purple-100);
+      border-left: 4px solid var(--purple);
+      background: var(--purple-50);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1rem 1.25rem;
+      margin: 1.5em 0;
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+    }
+
+    #output table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5em;
+      font-size: 0.9rem;
+      overflow: hidden;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+    }
+
+    #output th {
+      background: var(--purple);
+      color: white;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      text-align: left;
+      padding: 0.6rem 1rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+    }
+
+    #output td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: top;
+    }
+
+    #output tr:last-child td { border-bottom: none; }
+    #output tr:nth-child(even) td { background: var(--gray-50); }
+
+    #output .answer-box {
+      background: var(--yellow-50);
+      border-left: 4px solid var(--yellow);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 0.6rem 1rem;
+      margin: 0.4rem 0 1rem;
+      color: #92400e;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+    }
+
+    /* ── WORKSHEET SECTIONS ──────────────────────────── */
+    .ws-section {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: var(--radius-sm);
+      margin: 2.25rem 0 1.25rem;
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .ws-section-green  { background: #dcfce7; border-left: 4px solid #16a34a; color: #14532d; }
+    .ws-section-yellow { background: #fef9c3; border-left: 4px solid #ca8a04; color: #713f12; }
+    .ws-section-red    { background: #fee2e2; border-left: 4px solid #dc2626; color: #7f1d1d; }
+
+    /* ── ANSWER ELEMENTS ─────────────────────────────── */
+    .answer-line {
+      border-bottom: 1.5px solid #374151;
+      margin: 0.4rem 0 1.5rem;
+    }
+
+    .fill-blank {
+      display: inline-block;
+      border-bottom: 1.5px solid #374151;
+      min-width: 100px;
+      margin: 0 3px;
+      vertical-align: bottom;
+    }
+
+    .writing-lines {
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      margin: 0.5rem 0 1.5rem;
+      overflow: hidden;
+    }
+    .writing-line {
+      height: 38px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .writing-line:last-child { border-bottom: none; }
+
+    /* ── MULTIPLE CHOICE ──────────────────────────────── */
+    .mc-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin: 0.65rem 0 1.5rem;
+    }
+    .mc-opt {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.8rem;
+      font-size: 0.925rem;
+    }
+    .mc-letter {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid var(--purple-100);
+      background: var(--purple-50);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 0.78rem;
+      color: var(--purple);
+      flex-shrink: 0;
+    }
+
+    /* ── WORKING BOX ──────────────────────────────────── */
+    .working-box {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      margin: 0.5rem 0 1.5rem;
+      overflow: hidden;
+    }
+    .working-label {
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-100);
+      padding: 0.3rem 0.85rem;
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray-400);
+    }
+    .working-line {
+      height: 34px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .working-line:last-child { border-bottom: none; }
+
+    /* ── NUMBER LINE ──────────────────────────────────── */
+    .number-line-wrap {
+      margin: 0.75rem 0 1.75rem;
+      overflow-x: auto;
+    }
+    .number-line {
+      display: flex;
+      align-items: flex-end;
+      min-width: max-content;
+    }
+    .nl-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .nl-tick { width: 2px; height: 12px; background: #374151; border-radius: 1px; }
+    .nl-num  { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 700; color: #374151; }
+    .nl-seg  { height: 2px; background: #374151; width: 42px; margin-bottom: 16px; }
+
+    /* ── QUESTION ROWS ────────────────────────────────── */
+    .ws-q {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      margin: 1.1rem 0 0.25rem;
+      border-radius: 6px;
+    }
+    .ws-q-num {
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: #1f2937;
+      min-width: 1.75rem;
+      flex-shrink: 0;
+      padding-top: 0.05rem;
+    }
+    .ws-q-body { flex: 1; font-size: 0.92rem; color: #1f2937; line-height: 1.55; }
+
+    /* ── SVG CLOCK ─────────────────────────────────────── */
+    .svg-clock { display: inline-block; margin: 0.35rem 0.5rem 0.35rem 0; vertical-align: middle; }
+
+    /* ── SVG SHAPES ────────────────────────────────────── */
+    .svg-shapes-wrap { margin: 0.5rem 0 1.25rem; }
+
+    /* ── WORD BOXES ────────────────────────────────────── */
+    .word-box-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0.75rem 0 1.25rem;
+      align-items: center;
+    }
+    .word-box {
+      display: inline-block;
+      border: 2px solid #374151;
+      border-radius: 5px;
+      padding: 0.3rem 0.8rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.875rem;
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    /* ── SPEECH BUBBLE ─────────────────────────────────── */
+    .speech-bubble {
+      position: relative;
+      background: #f9fafb;
+      border: 2px solid #374151;
+      border-radius: 14px;
+      padding: 0.65rem 1.1rem;
+      margin: 0.75rem 0 1.5rem 1.5rem;
+      display: inline-block;
+      max-width: 80%;
+      font-style: italic;
+      color: #1f2937;
+    }
+    .speech-bubble::before {
+      content: '';
+      position: absolute;
+      left: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 8px solid transparent;
+      border-right-color: #374151;
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 8px solid transparent;
+      border-right-color: #f9fafb;
+    }
+
+    /* ── TOPIC EMOJI ROW ──────────────────────────────── */
+    .ws-emoji-row {
+      text-align: center;
+      font-size: 2.6rem;
+      letter-spacing: 0.3em;
+      margin: 0.65rem 0 1.75rem;
+      line-height: 1;
+    }
+
+    /* ── QUESTION DIFFICULTY STARS ───────────────────── */
+    .ws-q-stars {
+      font-size: 0.6rem;
+      color: #d1d5db;
+      flex-shrink: 0;
+      align-self: center;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+
+    /* ── OPENER QUESTION BOX (★ level) ──────────────── */
+    .ws-q-level-1 {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 0.45rem 0.75rem;
+    }
+
+    /* ── TWO-COLUMN QUESTION BLOCK ───────────────────── */
+    .ws-cols2 {
+      column-count: 2;
+      column-gap: 1.75rem;
+      margin: 0.5rem 0 0.75rem;
+    }
+    .ws-cols2 .ws-q { break-inside: avoid; }
+    .ws-cols2 .mc-options { grid-template-columns: 1fr; }
+    .ws-cols2 .answer-line { break-inside: avoid; }
+
+    /* ── SECTION DIVIDER (replaces coloured bars) ────── */
+    .ws-section-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2.25rem 0 1.25rem;
+    }
+    .ws-section-divider::before,
+    .ws-section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+    .ws-section-divider-inner {
+      font-family: var(--font-ui);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--gray-400);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── HEADER TOPIC ICON ────────────────────────────── */
+    .worksheet-paper-header { position: relative; }
+    .ws-header-topic-icon {
+      position: absolute;
+      top: 50%;
+      right: 2rem;
+      transform: translateY(-50%);
+      opacity: 0.09;
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    /* ── WORKSHEET THEMES (top accent) ───────────────── */
+    .ws-theme-space    { border-top: 4px solid #7c3aed !important; }
+    .ws-theme-nature   { border-top: 4px solid #16a34a !important; }
+    .ws-theme-ocean    { border-top: 4px solid #0284c7 !important; }
+    .ws-theme-history  { border-top: 4px solid #d97706 !important; }
+    .ws-theme-science  { border-top: 4px solid #0d9488 !important; }
+    .ws-theme-maths    { border-top: 4px solid #7c3aed !important; }
+    .ws-theme-literacy { border-top: 4px solid #db2777 !important; }
+
+    /* ── WRITE-IN BOX (Foundation Stage) ─────────────── */
+    .write-box {
+      display: inline-block;
+      border: 2px solid #374151;
+      border-radius: 5px;
+      min-width: 90px;
+      height: 34px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    /* ── WORD BANK PANEL ───────────────────────────────── */
+    .word-bank-panel {
+      border: 2px solid #374151;
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem 0.5rem;
+      margin: 0.5rem 0 1.75rem;
+      background: #f9fafb;
+    }
+    .word-bank-label {
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-500);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .word-bank-panel .word-box-row { margin: 0; }
+
+    /* ── ANSWER KEY PAGE ───────────────────────────────── */
+    .ws-answer-key-page {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 3px dashed #d1d5db;
+    }
+    .ws-answer-key-header {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #991b1b;
+      background: #fef2f2;
+      border: 1.5px solid #fca5a5;
+      border-radius: 6px;
+      padding: 0.55rem 1rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+
+    /* ── FOUNDATION STAGE OVERRIDES (.ws-fs) ──────────── */
+    .ws-fs .ws-q-body { font-size: 1.15rem; line-height: 1.75; }
+    .ws-fs .ws-q      { margin: 2rem 0 0.5rem; padding: 0.25rem 0; }
+    .ws-fs .ws-q-num  { font-size: 1.1rem; min-width: 2rem; }
+    .ws-fs .ws-q-stars     { display: none; }
+    .ws-fs .ws-q-level-1   { background: none; padding: 0; }
+    .ws-fs .ws-emoji-row   { font-size: 4rem; margin: 1rem 0 2.5rem; letter-spacing: 0.5em; }
+    .ws-fs .word-box       { font-size: 1rem; padding: 0.45rem 0.9rem; }
+    .ws-fs .answer-line    { margin-bottom: 2.5rem; }
+    .ws-fs .fill-blank     { min-width: 80px; border-bottom-width: 2px; }
+    .ws-fs .write-box      { min-width: 120px; height: 42px; }
+    .ws-fs h1 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      margin-bottom: 0.15rem;
+    }
+    .ws-fs > p:first-of-type {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
+
+    /* ── FS ACTIVITY GRID ──────────────────────────────── */
+    .ws-fs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .ws-fs-grid-item {
+      border: 2px solid #1f2937;
+      border-radius: 8px;
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-height: 95px;
+      background: #fff;
+    }
+
+    /* ── FS WORD DISPLAY (phonics) ─────────────────────── */
+    .ws-fs-word {
+      font-size: 2.6rem;
+      font-weight: 900;
+      font-family: var(--font-body);
+      letter-spacing: 0.04em;
+      color: #1f2937;
+      line-height: 1.1;
+      text-align: center;
+    }
+    .ws-fs-blank {
+      display: inline-block;
+      border-bottom: 3.5px solid #1f2937;
+      min-width: 2.4rem;
+      margin: 0 1px;
+      vertical-align: bottom;
+    }
+
+    /* ── FS NUMBER SEQUENCE (caterpillar) ──────────────── */
+    .ws-fs-seq {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0;
+      margin: 1.25rem 0 1.75rem;
+      row-gap: 1rem;
+    }
+    .ws-fs-bead {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 3px solid #1f2937;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #1f2937;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .ws-fs-bead-blank {
+      border: 3.5px dashed #9ca3af;
+      background: #f9fafb;
+    }
+    .ws-fs-bead-connector {
+      width: 20px;
+      height: 6px;
+      background: #1f2937;
+      flex-shrink: 0;
+      margin: 0 -2px;
+    }
+
+    /* ── FS PATTERN ROW ────────────────────────────────── */
+    .ws-fs-pattern {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 1rem 0 1.75rem;
+    }
+    .ws-fs-pattern-item {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ws-fs-pattern-blank {
+      border: 3px dashed #9ca3af;
+      border-radius: 8px;
+    }
+
+    /* ── FS THICK BORDER on worksheet paper ────────────── */
+    #worksheet-paper.ws-fs {
+      border: 3px solid #1f2937;
+    }
+
+    /* ── KS1/KS2/P7 ILLUSTRATION ROW ──────────────────── */
+    .ws-img-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin: 0.25rem 0 1.75rem;
+    }
+    .ws-img-slot {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ws-img {
+      object-fit: contain;
+      display: block;
+      filter: grayscale(1) contrast(1.1);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+    }
+    .ws-img-ks1 { width: 90px; height: 90px; }
+    .ws-img-ks2 { width: 75px; height: 75px; }
+    .ws-img-p7  { width: 55px; height: 55px; }
+
+    /* ── FS IMAGE SLOTS ────────────────────────────────── */
+    .ws-fs-img-slot {
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ws-fs-img-slot .ws-fs-img-loading {
+      width: 90px;
+      height: 90px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: ws-shimmer 1.4s infinite;
+    }
+    @keyframes ws-shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .ws-fs-img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      display: block;
+      filter: grayscale(1) contrast(1.1);
+    }
+    /* Hide SVG fallback when image has loaded */
+    .ws-fs-grid-item.has-img .ws-fs-count-fallback { display: none; }
+
+    /* ── STREAMING CURSOR ─────────────────────────────── */
+    .streaming::after {
+      content: '▋';
+      animation: blink 0.65s step-end infinite;
+      color: var(--purple);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ── ERROR ────────────────────────────────────────── */
+    .error-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #fef2f2;
+      border: 1.5px solid #fca5a5;
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.25rem;
+      color: #991b1b;
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+    }
+
+    .error-box .error-icon { flex-shrink: 0; margin-top: 1px; }
+
+    .error-box strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      color: #7f1d1d;
+    }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      color: var(--gray-400);
+      border-top: 1px solid var(--gray-200);
+      background: var(--white);
+      margin-top: 4rem;
+      line-height: 1.9;
+    }
+    footer strong { color: var(--gray-600); font-weight: 700; }
+
+    /* ── PRINT FOOTER (hidden on screen) ─────────────── */
+    .print-footer { display: none; }
+
+    /* ── STYLE TOGGLE ────────────────────────────────── */
+    .style-toggle {
+      display: flex;
+      background: var(--gray-100);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .style-toggle-btn {
+      padding: 0.3rem 0.85rem;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .style-toggle-btn.active {
+      background: var(--white);
+      color: var(--purple);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+
+/* ── FOCUS FIELD ──────────────────────────────────── */
+    .focus-row {
+      padding: 0 1.75rem 1rem;
+      border-top: 1px solid var(--gray-100);
+      padding-top: 0.85rem;
+    }
+    .focus-row input {
+      width: 100%;
+      padding: 0.55rem 0.9rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .focus-row input:focus {
+      border-color: var(--purple);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
+    }
+    .focus-row input::placeholder { color: var(--gray-400); }
+
+    /* ── SURPRISE BUTTON ──────────────────────────────── */
+    .surprise-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: var(--white);
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .surprise-btn:hover {
+      border-color: #fde68a;
+      background: var(--yellow-50);
+      color: #92400e;
+      transform: translateY(-1px);
+    }
+
+    /* ── UPGRADE PANEL ────────────────────────────────── */
+    .upgrade-panel {
+      display: none;
+      max-width: 740px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .upgrade-panel.open { display: block; }
+    .upgrade-inner {
+      background: linear-gradient(135deg, #fdf4ff 0%, #f5f3ff 100%);
+      border: 1.5px solid var(--purple-100);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+    }
+    .upgrade-emoji { font-size: 2.25rem; margin-bottom: 0.65rem; }
+    .upgrade-title {
+      font-family: var(--font-ui);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+    }
+    .upgrade-body {
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      max-width: 440px;
+      margin: 0 auto 1rem;
+      line-height: 1.65;
+    }
+    .upgrade-price {
+      display: inline-block;
+      background: var(--purple);
+      color: white;
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 800;
+      padding: 0.25rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+    }
+    .upgrade-email-row {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 380px;
+      margin: 0 auto 0.6rem;
+    }
+    .upgrade-email-row input {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      outline: none;
+      color: var(--gray-900);
+      background: white;
+      min-width: 0;
+    }
+    .upgrade-email-row input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+    .btn-purple {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.2rem;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-purple:hover { background: var(--purple-dark); }
+    .upgrade-note { font-family: var(--font-ui); font-size: 0.72rem; color: var(--gray-400); }
+    .upgrade-confirmed {
+      display: none;
+      margin-top: 0.75rem;
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .upgrade-confirmed.show { display: block; }
+
+    /* ── RESOURCE HISTORY ─────────────────────────────── */
+    .history-wrap {
+      display: none;
+      max-width: 740px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .history-wrap.has-items { display: block; }
+    .history-label {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.55rem;
+    }
+    .history-list { display: flex; flex-direction: column; gap: 0.35rem; }
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.6rem 0.9rem;
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      text-align: left;
+      width: 100%;
+      color: var(--gray-700);
+    }
+    .history-item:hover { border-color: var(--purple-100); background: var(--purple-50); }
+    .history-item-title { flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-item-meta { font-size: 0.72rem; color: var(--gray-400); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── LOADING MESSAGE ──────────────────────────────── */
+    #loading-msg { transition: opacity 0.25s ease; }
+
+    /* ── BIG PRINT BUTTON ─────────────────────────────── */
+    .print-btn-big {
+      display: none;
+      width: 100%;
+      margin-top: 0.85rem;
+      padding: 1rem 1.5rem;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .print-btn-big.show { display: flex; }
+    .print-btn-big:hover {
+      background: var(--purple-dark);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+      transform: translateY(-1px);
+    }
+
+    /* ── PRINT ────────────────────────────────────────── */
+    @media print {
+      @page {
+        size: A4;
+        margin: 1.6cm 1.8cm 2cm;
+      }
+
+      .nav, .hero, .creator-wrap, .examples-wrap, .key-panel,
+      .usage-limit-banner, .upgrade-panel, .history-wrap,
+      .worksheet-toolbar, .ws-brand-row,
+      .print-btn-big, .gen-loading, footer { display: none !important; }
+
+      body {
+        background: white;
+        font-family: 'Georgia', 'Palatino Linotype', Palatino, serif;
+        font-size: 11pt;
+        color: #1a1a1a;
+      }
+
+      #output-section {
+        display: block !important;
+        padding: 0;
+        max-width: 100%;
+        margin: 0;
+      }
+
+      .worksheet-paper {
+        box-shadow: none;
+        border: 1pt solid #aaa;
+        border-radius: 0;
+      }
+
+      .worksheet-paper-header {
+        background: white;
+        border-bottom: 2pt solid #333;
+        padding: 0 0 10pt 0;
+      }
+
+      .ws-fields { gap: 3.5cm; }
+      .ws-field-line { background: #555; }
+      .ws-field-label { color: #555; }
+      .ws-field.short .ws-field-line { width: 130px; }
+
+      #output {
+        padding: 14pt 0 0;
+        font-size: 11pt;
+        line-height: 1.65;
+        font-family: 'Georgia', Palatino, serif;
+        color: #1a1a1a;
+      }
+
+      #output h1 {
+        font-family: 'Georgia', serif;
+        font-size: 16pt;
+        letter-spacing: normal;
+        margin-bottom: 4pt;
+        border-bottom: 1.5pt solid #333;
+        padding-bottom: 5pt;
+      }
+
+      #output h2 {
+        font-family: 'Georgia', serif;
+        font-size: 9pt;
+        border-bottom: 0.75pt solid #bbb;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 16pt;
+        padding-bottom: 3pt;
+      }
+
+      #output h3 {
+        font-family: 'Georgia', serif;
+        font-size: 11pt;
+        font-style: italic;
+        margin-top: 12pt;
+      }
+
+      #output h1, #output h2, #output h3 { page-break-after: avoid; }
+      #output p { margin-bottom: 5pt; }
+      #output ul, #output ol { margin-left: 16pt; }
+      #output li { margin-bottom: 3pt; }
+
+      #output blockquote {
+        border: 1pt solid #999;
+        border-left: 3pt solid #333;
+        background: #f6f6f6 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 8pt 12pt;
+        border-radius: 0;
+        font-family: 'Georgia', serif;
+        font-size: 10.5pt;
+        color: #1a1a1a;
+      }
+
+      #output table {
+        font-size: 9.5pt;
+        border: 1pt solid #aaa;
+        border-radius: 0;
+      }
+
+      #output th {
+        background: #e8e8e8 !important;
+        color: #1a1a1a;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border-bottom: 1.5pt solid #aaa;
+      }
+
+      #output td {
+        border: 0.5pt solid #ccc;
+      }
+
+      #output tr:nth-child(even) td {
+        background: #fafafa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      #output .answer-box {
+        border: 1pt solid #ccc;
+        border-left: 3pt solid #888;
+        background: #f5f5f0 !important;
+        color: #333;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      #output hr {
+        border-top: 0.75pt dashed #bbb;
+      }
+
+      .ws-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border-radius: 0;
+        margin: 14pt 0 10pt;
+        padding: 5pt 10pt;
+        font-size: 9.5pt;
+      }
+      .ws-section-green  { background: #e8f5e9 !important; border-left: 3pt solid #2e7d32; }
+      .ws-section-yellow { background: #fff9c4 !important; border-left: 3pt solid #f57f17; }
+      .ws-section-red    { background: #ffebee !important; border-left: 3pt solid #c62828; }
+
+      .ws-section-divider { margin: 14pt 0 10pt; }
+      .ws-section-divider::before,
+      .ws-section-divider::after { background: #ccc; }
+      .ws-section-divider-inner { color: #888; font-size: 7pt; }
+
+      .ws-emoji-row { font-size: 22pt; margin-bottom: 14pt; letter-spacing: 0.2em; }
+
+      .ws-q-stars { font-size: 6pt; color: #ccc; }
+      .ws-q-level-1 {
+        background: #f7f7f7 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 3pt 7pt;
+        border-radius: 2pt;
+      }
+
+      .ws-cols2 { column-count: 2; column-gap: 1cm; }
+
+      .ws-header-topic-icon { display: none; }
+      [class*="ws-theme-"] { border-top-width: 3pt !important; }
+
+      .answer-line { border-color: #333; margin-bottom: 14pt; }
+      .fill-blank  { border-color: #333; min-width: 80pt; }
+
+      .writing-lines { border: 0.75pt solid #aaa; border-radius: 0; margin-bottom: 10pt; }
+      .writing-line  { height: 24pt; border-color: #ccc; }
+
+      .mc-options { gap: 4pt; margin-bottom: 10pt; }
+      .mc-opt     { border: 0.5pt solid #999; border-radius: 3pt; padding: 3pt 7pt; }
+      .mc-letter  {
+        background: white !important;
+        border: 0.75pt solid #555;
+        width: 15pt; height: 15pt;
+        font-size: 7.5pt;
+        color: #333;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .working-box   { border: 0.75pt solid #aaa; }
+      .working-label { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 2pt 8pt; }
+      .working-line  { height: 24pt; border-color: #ccc; }
+
+      .number-line-wrap { margin-bottom: 14pt; }
+      .nl-seg  { width: 32pt; }
+      .nl-tick { background: #333; }
+      .nl-num  { font-size: 7.5pt; color: #333; }
+
+      .ws-q { margin: 9pt 0 1pt; gap: 4pt; }
+      .ws-q-num { font-size: 10.5pt; min-width: 16pt; }
+      .ws-q-body { font-size: 10.5pt; }
+
+      .svg-clock { margin: 2pt 4pt; }
+      .svg-shapes-wrap { margin-bottom: 10pt; }
+
+      .word-box-row { margin-bottom: 8pt; gap: 5pt; }
+      .word-box {
+        border: 0.75pt solid #333;
+        border-radius: 2pt;
+        padding: 1.5pt 5pt;
+        font-size: 9pt;
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .speech-bubble {
+        border: 0.75pt solid #333;
+        border-radius: 8pt;
+        padding: 4pt 8pt;
+        background: #f6f6f6 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-size: 10.5pt;
+      }
+      .speech-bubble::before { border-right-color: #333; }
+      .speech-bubble::after  { border-right-color: #f6f6f6; }
+
+      .print-footer {
+        display: block;
+        position: fixed;
+        bottom: 0.8cm;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-size: 7.5pt;
+        color: #aaa;
+        border-top: 0.5pt solid #ddd;
+        padding-top: 5pt;
+      }
+
+      /* Answer key on new page */
+      .ws-answer-key-page {
+        page-break-before: always;
+        border-top: none;
+        padding-top: 1.5cm;
+        margin-top: 0;
+      }
+      .ws-answer-key-header {
+        background: #f0f0f0 !important;
+        border: 1pt solid #999;
+        color: #333;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-size: 9pt;
+      }
+
+      /* Write-in box */
+      .write-box {
+        border: 0.75pt solid #333;
+        border-radius: 2pt;
+        height: 20pt;
+        min-width: 60pt;
+      }
+
+      /* Word bank panel */
+      .word-bank-panel {
+        border: 0.75pt solid #333;
+        background: #f9f9f9 !important;
+        border-radius: 3pt;
+        padding: 4pt 8pt;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .word-bank-label { font-size: 7pt; }
+
+      /* Foundation Stage overrides */
+      .ws-fs .ws-q-body { font-size: 14pt; }
+      .ws-fs .ws-q-num  { font-size: 14pt; }
+      .ws-fs .ws-q      { margin: 16pt 0 2pt; }
+      .ws-fs .ws-emoji-row { font-size: 30pt; margin-bottom: 16pt; }
+      .ws-fs .write-box { height: 26pt; min-width: 80pt; }
+      .ws-fs .answer-line { margin-bottom: 20pt; }
+      .ws-fs h1 { font-size: 22pt; }
+
+      /* FS grid */
+      .ws-fs-grid { gap: 8pt; }
+      .ws-fs-grid-item {
+        border: 1.5pt solid #333;
+        padding: 6pt;
+        min-height: 65pt;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .ws-fs-word { font-size: 22pt; }
+      .ws-fs-blank { border-bottom: 2.5pt solid #333; min-width: 20pt; }
+
+      /* FS sequence beads */
+      .ws-fs-bead {
+        width: 34pt; height: 34pt;
+        border: 2pt solid #333;
+        font-size: 11pt;
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .ws-fs-bead-blank {
+        border: 2pt dashed #999 !important;
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .ws-fs-bead-connector {
+        width: 10pt; height: 4pt;
+        background: #333 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* FS pattern */
+      .ws-fs-pattern-item { width: 38pt; height: 38pt; }
+      .ws-fs-pattern-blank { border: 2pt dashed #999; }
+
+      /* thick border for FS paper */
+      #worksheet-paper.ws-fs { border: 2pt solid #333; }
+
+      /* images in print */
+      .ws-fs-img { width: 70pt; height: 70pt; filter: grayscale(1) contrast(1.2); }
+      .ws-fs-img-slot { width: 70pt; height: 70pt; }
+      .ws-fs-img-loading { display: none; }
+      .ws-img-loading, .ws-fs-img-loading { display: none; }
+      .ws-img-ks1 { width: 65pt; height: 65pt; }
+      .ws-img-ks2 { width: 55pt; height: 55pt; }
+      .ws-img-p7  { width: 40pt; height: 40pt; }
+      .ws-img-row { margin-bottom: 12pt; gap: 6pt; }
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────── */
+    @media (max-width: 640px) {
+      .nav { padding: 0 1rem; }
+      .nav-tagline { display: none; }
+      .hero { padding: 2.5rem 1.25rem 1.75rem; }
+      .hero h1 { font-size: 2rem; }
+      .hero-sub { font-size: 0.95rem; }
+      .creator-wrap, .examples-wrap, #output-section,
+      .history-wrap, .upgrade-panel { padding-left: 1rem; padding-right: 1rem; }
+      .creator-textarea-wrap { padding: 1.25rem 1.25rem 0.85rem; }
+      .options-bar { padding: 0.65rem 1.25rem; gap: 0.5rem; }
+      .style-toggle { width: 100%; }
+      .style-toggle-btn { flex: 1; text-align: center; }
+.focus-row { padding: 0.75rem 1.25rem 0.85rem; }
+      .actions-bar { padding: 0.85rem 1.25rem; flex-direction: column; align-items: stretch; }
+      .actions-bar .usage-pill { text-align: center; justify-content: center; }
+      .surprise-btn { width: 100%; justify-content: center; }
+      #generate-btn { width: 100%; justify-content: center; }
+      .print-btn-big { margin-top: 0.65rem; font-size: 0.95rem; }
+      #output { padding: 1.25rem; }
+      .gen-loading { padding: 1.5rem; }
+      .worksheet-paper-header { padding: 1.25rem 1.5rem; }
+      .ws-fields { gap: 1.5rem; }
+      .upgrade-email-row { flex-direction: column; }
+      .btn-purple { width: 100%; justify-content: center; }
+      .mc-options { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">Spark<span class="accent">Sheets</span></span>
+        <span class="nav-tagline">NI Curriculum worksheets, generated in seconds</span>
+      </div>
+    </a>
+    <div class="nav-right">
+      <button class="nav-key-btn" id="nav-key-btn" onclick="toggleKeyPanel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+        <span id="nav-key-label">Add API Key</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    AI-powered teacher resources
+  </div>
+  <h1>Create brilliant resources<br><span class="accent">in seconds</span></h1>
+  <p class="hero-sub">Describe what you need, pick your year group and subject, and get a print-ready worksheet instantly.</p>
+</section>
+
+<!-- API KEY PANEL -->
+<div class="key-panel" id="key-panel">
+  <div class="key-panel-inner">
+    <div class="key-panel-title">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+      Anthropic API Key
+    </div>
+    <div class="key-row">
+      <input type="password" id="api-key" placeholder="sk-ant-api03-…" autocomplete="off">
+      <button class="btn-outline" onclick="saveKey()">Save</button>
+      <button class="btn-outline danger" onclick="clearKey()">Clear</button>
+    </div>
+    <div class="key-status" id="key-status"></div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--gray-100)">
+      <div class="key-panel-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        OpenAI API Key
+        <span style="font-size:0.65rem;font-weight:500;color:var(--gray-400);margin-left:0.4rem">— worksheet illustrations (optional)</span>
+      </div>
+      <div class="key-row">
+        <input type="password" id="openai-key" placeholder="sk-…" autocomplete="off">
+        <button class="btn-outline" onclick="saveOpenAIKey()">Save</button>
+        <button class="btn-outline danger" onclick="clearOpenAIKey()">Clear</button>
+      </div>
+      <div class="key-status" id="openai-key-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- USAGE BANNER -->
+<div class="usage-limit-banner" id="usage-banner">
+  <div class="usage-limit-inner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>
+      <strong>You've used your 5 free resources this month!</strong>
+      Thanks for trying SparkSheets. Upgrade to SparkSheets Pro for unlimited resources.
+      <button onclick="document.getElementById('upgrade-panel').classList.add('open');document.getElementById('upgrade-panel').scrollIntoView({behavior:'smooth',block:'center'})" style="margin-left:0.5rem;background:none;border:none;color:#92400e;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:700;padding:0;">See upgrade options →</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPGRADE PANEL -->
+<div class="upgrade-panel" id="upgrade-panel">
+  <div class="upgrade-inner">
+    <div class="upgrade-emoji">✨</div>
+    <div class="upgrade-title">You've used your 5 free resources this month!</div>
+    <div class="upgrade-body">Upgrade to <strong>SparkSheets Pro</strong> for unlimited worksheets and lesson plans — perfect for busy NI primary teachers.</div>
+    <div class="upgrade-price">£4.99 / month — coming soon</div>
+    <div class="upgrade-email-row" id="upgrade-email-row">
+      <input type="email" id="upgrade-email" placeholder="your@email.com" />
+      <button class="btn-purple" onclick="notifyUpgrade()">Notify Me</button>
+    </div>
+    <div class="upgrade-confirmed" id="upgrade-confirmed">
+      ✓ You're on the list! We'll email you when Pro launches.
+    </div>
+    <div class="upgrade-note">No payment needed yet — we'll notify you when it's ready.</div>
+  </div>
+</div>
+
+<!-- CREATOR CARD -->
+<div class="creator-wrap">
+  <div class="creator-card">
+    <div class="creator-textarea-wrap">
+      <textarea
+        id="prompt"
+        rows="4"
+        placeholder="e.g. A worksheet on multiplying fractions for P5 with mixed question types — short answer, fill in the blank, and a problem-solving challenge…"
+      ></textarea>
+    </div>
+
+    <div class="options-bar">
+      <div class="style-toggle">
+        <button class="style-toggle-btn active" data-style="worksheet"   onclick="setStyle('worksheet')">Worksheet</button>
+        <button class="style-toggle-btn"         data-style="lesson plan" onclick="setStyle('lesson plan')">Lesson Plan</button>
+        <button class="style-toggle-btn"         data-style="quiz"        onclick="setStyle('quiz')">Quiz</button>
+      </div>
+<select id="year-group">
+        <option value="">Any year</option>
+        <option value="P1 (Foundation Stage)">P1</option>
+        <option value="P2 (Foundation Stage)">P2</option>
+        <option value="P3 (Key Stage 1)">P3</option>
+        <option value="P4 (Key Stage 1)">P4</option>
+        <option value="P5 (Key Stage 2)">P5</option>
+        <option value="P6 (Key Stage 2)">P6</option>
+        <option value="P7 (Key Stage 2)">P7</option>
+      </select>
+      <select id="subject">
+        <option value="">Any subject</option>
+        <option value="Maths">Maths</option>
+        <option value="English">English</option>
+        <option value="Science">Science</option>
+        <option value="History">History</option>
+        <option value="Geography">Geography</option>
+        <option value="Art">Art</option>
+        <option value="PSHE">PSHE</option>
+      </select>
+      <select id="include-answers">
+        <option value="yes">With answers</option>
+        <option value="no">No answers</option>
+      </select>
+    </div>
+
+    <div class="focus-row">
+      <input type="text" id="focus-context" placeholder="Any specific focus or context? e.g. 'Our class topic is Ancient Egyptians' or 'Focus on the -tion suffix'" />
+    </div>
+
+    <div class="actions-bar">
+      <span class="usage-pill">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span class="count" id="usage-count">0</span> of 5 free resources used
+      </span>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="surprise-btn" onclick="surpriseMe()">🎲 Surprise Me</button>
+        <button id="generate-btn" onclick="generate()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          Generate Resource
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXAMPLES -->
+<div class="examples-wrap">
+  <p class="examples-label">Try an example</p>
+  <div class="chips">
+    <span class="chip" onclick="setExample(this)">P4 maths – fractions intro</span>
+    <span class="chip" onclick="setExample(this)">P7 science – food chains quiz</span>
+    <span class="chip" onclick="setExample(this)">P2 phonics – 'oo' sound</span>
+    <span class="chip" onclick="setExample(this)">P6 lesson plan – persuasive writing</span>
+    <span class="chip" onclick="setExample(this)">P5 – Ancient Egypt reading comprehension</span>
+  </div>
+</div>
+
+<!-- RECENT RESOURCES -->
+<div class="history-wrap" id="history-wrap">
+  <p class="history-label">Recent Resources</p>
+  <div class="history-list" id="history-list"></div>
+</div>
+
+<!-- OUTPUT -->
+<div id="output-section">
+  <div class="worksheet-toolbar">
+    <div class="ws-toolbar-left">
+      <div class="ws-toolbar-dot" id="output-dot"></div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Your Resource
+    </div>
+    <div class="ws-actions">
+      <button class="btn-sm" onclick="window.print()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        Print / PDF
+      </button>
+      <button class="btn-sm" id="copy-btn" onclick="copyOutput()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        Copy
+      </button>
+    </div>
+  </div>
+
+  <div class="worksheet-paper" id="worksheet-paper">
+    <div class="worksheet-paper-header">
+      <div class="ws-header-topic-icon" id="ws-header-topic-icon"></div>
+      <div class="ws-brand-row">
+        <div class="ws-brand-icon">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <span class="ws-brand-name">SparkSheets</span>
+      </div>
+      <div class="ws-fields">
+        <div class="ws-field">
+          <span class="ws-field-label">Name</span>
+          <div class="ws-field-line"></div>
+        </div>
+        <div class="ws-field short">
+          <span class="ws-field-label">Date</span>
+          <div class="ws-field-line"></div>
+        </div>
+        <div class="ws-field short">
+          <span class="ws-field-label">Class</span>
+          <div class="ws-field-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div id="gen-loading" class="gen-loading">
+      <div class="skeleton sk-title"></div>
+      <div class="skeleton sk-meta"></div>
+      <div class="skeleton sk-heading"></div>
+      <div class="skeleton sk-line sk-full"></div>
+      <div class="skeleton sk-line sk-lg"></div>
+      <div class="skeleton sk-line sk-full"></div>
+      <div class="skeleton sk-line sk-md"></div>
+      <div class="skeleton sk-heading"></div>
+      <div class="skeleton sk-line sk-full"></div>
+      <div class="skeleton sk-line sk-lg"></div>
+      <div class="skeleton sk-line sk-sm"></div>
+      <div class="skeleton sk-line sk-full"></div>
+      <div class="skeleton sk-line sk-md"></div>
+      <div class="gen-loading-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span id="loading-msg">Generating your resource…</span>
+      </div>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <button class="print-btn-big" id="print-btn-big" onclick="window.print()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+    Print this resource
+  </button>
+</div>
+
+<!-- Print-only footer -->
+<div class="print-footer">Generated by SparkSheets &nbsp;|&nbsp; sparksheets.co.uk</div>
+
+<footer>
+  <strong>SparkSheets</strong> — Built for Northern Ireland primary teachers<br>
+  Powered by Claude AI &nbsp;·&nbsp; Your API key is stored only in your browser &nbsp;·&nbsp; © 2025
+  <br><button onclick="localStorage.setItem('spark_usage','0');document.getElementById('usage-count').textContent='0';this.textContent='✓ Reset';setTimeout(()=>this.textContent='Dev Reset',1500)" style="margin-top:0.75rem;background:none;border:none;color:var(--gray-300);font-family:var(--font-ui);font-size:0.68rem;cursor:pointer;padding:0;letter-spacing:0.03em;">Dev Reset</button>
+</footer>
+
+<script>
+  // ── Key management ────────────────────────────────────────────
+  const keyInput  = document.getElementById('api-key');
+  const keyStatus = document.getElementById('key-status');
+
+  function toggleKeyPanel() {
+    document.getElementById('key-panel').classList.toggle('open');
+  }
+
+  function saveKey() {
+    const key = keyInput.value.trim();
+    if (!key) return;
+    localStorage.setItem('anthropic_key', key);
+    showKeyStatus();
+    document.getElementById('key-panel').classList.remove('open');
+  }
+
+  function clearKey() {
+    localStorage.removeItem('anthropic_key');
+    keyInput.value = '';
+    showKeyStatus();
+  }
+
+  function getKey() {
+    return keyInput.value.trim() || localStorage.getItem('anthropic_key') || '';
+  }
+
+  function showKeyStatus() {
+    const key   = getKey();
+    const btn   = document.getElementById('nav-key-btn');
+    const label = document.getElementById('nav-key-label');
+    if (key) {
+      keyStatus.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> API key saved`;
+      keyStatus.className = 'key-status saved';
+      keyInput.value = key;
+      label.textContent = 'API Key ✓';
+      btn.classList.add('key-saved');
+    } else {
+      keyStatus.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No key — get yours at console.anthropic.com`;
+      keyStatus.className = 'key-status missing';
+      label.textContent = 'Add API Key';
+      btn.classList.remove('key-saved');
+      document.getElementById('key-panel').classList.add('open');
+    }
+  }
+
+  showKeyStatus();
+
+  // ── OpenAI key management ────────────────────────────────────
+  const openaiKeyInput  = document.getElementById('openai-key');
+  const openaiKeyStatus = document.getElementById('openai-key-status');
+
+  function saveOpenAIKey() {
+    const key = openaiKeyInput.value.trim();
+    if (!key) return;
+    localStorage.setItem('openai_api_key', key);
+    showOpenAIKeyStatus();
+    document.getElementById('key-panel').classList.remove('open');
+  }
+
+  function clearOpenAIKey() {
+    localStorage.removeItem('openai_api_key');
+    openaiKeyInput.value = '';
+    showOpenAIKeyStatus();
+  }
+
+  function getOpenAIKey() {
+    return openaiKeyInput.value.trim() || localStorage.getItem('openai_api_key') || '';
+  }
+
+  function showOpenAIKeyStatus() {
+    const key = getOpenAIKey();
+    if (key) {
+      openaiKeyStatus.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> OpenAI key saved`;
+      openaiKeyStatus.className = 'key-status saved';
+      openaiKeyInput.value = key;
+    } else {
+      openaiKeyStatus.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No key — without this, worksheets will not include illustrations`;
+      openaiKeyStatus.className = 'key-status missing';
+    }
+  }
+
+  showOpenAIKeyStatus();
+
+  // ── Usage counter (resets monthly) ───────────────────────────
+  function getCurrentMonth() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  }
+
+  function getUsageCount() {
+    if (localStorage.getItem('spark_usage_month') !== getCurrentMonth()) {
+      localStorage.setItem('spark_usage_month', getCurrentMonth());
+      localStorage.setItem('spark_usage', '0');
+    }
+    return parseInt(localStorage.getItem('spark_usage') || '0', 10);
+  }
+
+  function incrementUsage() {
+    const count = getUsageCount() + 1;
+    localStorage.setItem('spark_usage', String(count));
+    updateUsageDisplay();
+    return count;
+  }
+
+  function updateUsageDisplay() {
+    const count = getUsageCount();
+    document.getElementById('usage-count').textContent = count;
+    if (count >= 5) document.getElementById('usage-banner').classList.add('visible');
+  }
+
+  updateUsageDisplay();
+
+  // ── Upgrade / email notify ─────────────────────────────────────
+  function notifyUpgrade() {
+    const email = document.getElementById('upgrade-email').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('upgrade-email').focus();
+      return;
+    }
+    localStorage.setItem('spark_notify_email', email);
+    document.getElementById('upgrade-confirmed').classList.add('show');
+    document.getElementById('upgrade-email-row').style.display = 'none';
+  }
+
+  // ── Resource history ───────────────────────────────────────────
+  function saveHistory(text, yearGroup, subject, style) {
+    const title = (text.match(/^# (.+)$/m) || [])[1] || 'Untitled Resource';
+    const history = getHistory();
+    history.unshift({
+      title: title.slice(0, 80),
+      yearGroup: (yearGroup || '').split(' ')[0],
+      subject: subject || '',
+      type: style || 'worksheet',
+      text,
+      date: new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short'})
+    });
+    localStorage.setItem('spark_history', JSON.stringify(history.slice(0, 5)));
+    renderHistory();
+  }
+
+  function getHistory() {
+    try { return JSON.parse(localStorage.getItem('spark_history') || '[]'); } catch { return []; }
+  }
+
+  function renderHistory() {
+    const history = getHistory();
+    const wrap = document.getElementById('history-wrap');
+    const list = document.getElementById('history-list');
+    if (!history.length) { wrap.classList.remove('has-items'); return; }
+    wrap.classList.add('has-items');
+    list.innerHTML = history.map((h, i) => `
+      <button class="history-item" onclick="loadHistoryItem(${i})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--gray-400)"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="history-item-title">${h.title}</span>
+        <span class="history-item-meta">${[h.subject, h.yearGroup, h.date].filter(Boolean).join(' · ')}</span>
+      </button>
+    `).join('');
+  }
+
+  function loadHistoryItem(i) {
+    const item = getHistory()[i];
+    if (!item) return;
+    const outputSection = document.getElementById('output-section');
+    const outputEl      = document.getElementById('output');
+    document.getElementById('gen-loading').classList.remove('active');
+    outputSection.style.display = 'block';
+    outputEl.classList.remove('streaming');
+    outputEl.innerHTML = markdownToHtml(item.text);
+    document.getElementById('print-btn-big').classList.add('show');
+    outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  renderHistory();
+
+  // ── Surprise Me ───────────────────────────────────────────────
+  const surpriseIdeas = [
+    { yearGroup: 'P2 (Foundation Stage)', subject: 'Maths',     prompt: 'Counting to 20 and number bonds to 10'                              },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'English',   prompt: 'Punctuation — capital letters, full stops and question marks'        },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Science',   prompt: 'Food chains — producers, consumers and predators'                    },
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'Maths',     prompt: "Telling the time — o'clock and half past"                           },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'English',   prompt: 'Persuasive writing — should school uniform be compulsory?'           },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Maths',     prompt: 'Fractions, decimals and percentages — converting between them'       },
+    { yearGroup: 'P1 (Foundation Stage)', subject: 'English',   prompt: 'Initial letter sounds — s, a, t, p, i, n'                           },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'History',   prompt: 'The Vikings — who were they and why did they come to Ireland?'       },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Geography', prompt: 'Rivers of Northern Ireland — the water cycle and river features'     },
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'Science',   prompt: 'Parts of a plant and what plants need to grow'                       },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'History',   prompt: 'Life in Victorian times — school, work and home for children'        },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'English',   prompt: 'Figurative language — metaphor, simile and personification'          },
+    { yearGroup: 'P2 (Foundation Stage)', subject: 'Science',   prompt: 'Animals and their young — matching babies to their parents'          },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Maths',     prompt: 'Area and perimeter of rectangles and compound shapes'                },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'PSHE',      prompt: 'Online safety — staying safe and responsible on the internet'        },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Geography', prompt: 'Climate change — causes, effects and what we can do in NI'           },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'Maths',     prompt: 'Multiplication tables — 3, 4 and 8 times tables'                    },
+    { yearGroup: 'P1 (Foundation Stage)', subject: 'Maths',     prompt: 'Shapes — recognising circles, squares, triangles and rectangles'     },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Science',   prompt: 'The Solar System — planets, the Moon and space exploration'          },
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'English',   prompt: 'Adjectives and descriptive writing — describing a character'         },
+  ];
+
+  function surpriseMe() {
+    const idea = surpriseIdeas[Math.floor(Math.random() * surpriseIdeas.length)];
+    const ygEl = document.getElementById('year-group');
+    for (let i = 0; i < ygEl.options.length; i++) {
+      if (ygEl.options[i].value === idea.yearGroup) { ygEl.selectedIndex = i; break; }
+    }
+    const subEl = document.getElementById('subject');
+    for (let i = 0; i < subEl.options.length; i++) {
+      if (subEl.options[i].value === idea.subject) { subEl.selectedIndex = i; break; }
+    }
+    setStyle('worksheet');
+    document.getElementById('prompt').value = idea.prompt;
+    document.getElementById('focus-context').value = '';
+    const btn = document.querySelector('.surprise-btn');
+    btn.textContent = '✨ Got one!';
+    setTimeout(() => { btn.innerHTML = '🎲 Surprise Me'; }, 1800);
+    document.getElementById('generate-btn').focus();
+  }
+
+  // ── Style toggle ───────────────────────────────────────────────
+  let currentStyle = 'worksheet';
+
+  function setStyle(style) {
+    currentStyle = style;
+    document.querySelectorAll('.style-toggle-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.style === style);
+    });
+  }
+
+// ── Loading messages ───────────────────────────────────────────
+  const loadingMessages = [
+    'Sharpening pencils…',
+    'Checking the NI Curriculum…',
+    'Almost ready for your class…',
+    'Putting the kettle on…',
+    'Crafting perfect questions…',
+    'Adding the finishing touches…'
+  ];
+  let loadingMsgTimer;
+
+  function startLoadingMessages() {
+    let idx = 0;
+    const el = document.getElementById('loading-msg');
+    if (!el) return;
+    el.textContent = loadingMessages[0];
+    loadingMsgTimer = setInterval(() => {
+      idx = (idx + 1) % loadingMessages.length;
+      el.style.opacity = '0';
+      setTimeout(() => { el.textContent = loadingMessages[idx]; el.style.opacity = '1'; }, 230);
+    }, 3200);
+  }
+
+  function stopLoadingMessages() {
+    clearInterval(loadingMsgTimer);
+    const el = document.getElementById('loading-msg');
+    if (el) el.style.opacity = '1';
+  }
+
+  // ── Example chips ─────────────────────────────────────────────
+  function setExample(chip) {
+    document.getElementById('prompt').value = chip.textContent.trim();
+    document.getElementById('prompt').focus();
+  }
+
+  // ── Friendly error messages ───────────────────────────────────
+  function friendlyError(err) {
+    const msg = (err.message || '').toLowerCase();
+    if (msg.includes('401') || msg.includes('invalid_api_key') || msg.includes('authentication_error'))
+      return { title: 'API key not recognised', body: 'Double-check your key in the API Key settings above. It should start with sk-ant-api03-…' };
+    if (msg.includes('403'))
+      return { title: 'Access denied', body: 'Your API key doesn\'t have permission to use this model. Check your Anthropic account.' };
+    if (msg.includes('429') || msg.includes('rate_limit'))
+      return { title: 'Too many requests', body: 'You\'ve hit a rate limit. Wait a moment and try again — this usually clears in under a minute.' };
+    if (msg.includes('529') || msg.includes('overloaded'))
+      return { title: 'Claude is very busy right now', body: 'Anthropic\'s servers are under heavy load. Try again in a few seconds.' };
+    if (msg.includes('500') || msg.includes('502') || msg.includes('503'))
+      return { title: 'Something went wrong on Anthropic\'s end', body: 'This is a temporary server error. Try again in a moment.' };
+    if (msg.includes('failed to fetch') || msg.includes('networkerror') || msg.includes('load failed'))
+      return { title: 'Connection problem', body: 'Couldn\'t reach the server. Check your internet connection and try again.' };
+    return { title: 'Something went wrong', body: err.message || 'An unexpected error occurred. Please try again.' };
+  }
+
+  // ── Subject header icons ──────────────────────────────────────
+  const subjectIcons = {
+    'Maths':     `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+    'English':   `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    'Science':   `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2v5.5a6 6 0 0 1 2.7 10.8L15.5 20H8.5l-1.7-1.7A6 6 0 0 1 9.5 7.5V2h5z"/><line x1="9" y1="2" x2="15" y2="2"/></svg>`,
+    'History':   `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    'Geography': `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+    'PSHE':      `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+    'Art':       `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2"/><circle cx="17.5" cy="10.5" r="2"/><circle cx="8.5" cy="7.5" r="2"/><circle cx="6.5" cy="12.5" r="2"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>`,
+    'default':   `<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>`,
+  };
+
+  function injectHeaderIcon(subject) {
+    const el = document.getElementById('ws-header-topic-icon');
+    if (!el) return;
+    el.innerHTML = subjectIcons[subject] || subjectIcons['default'];
+  }
+
+  // ── Theme application ──────────────────────────────────────────
+  function applyTheme(theme) {
+    const paper = document.getElementById('worksheet-paper');
+    if (!paper) return;
+    paper.className = paper.className.replace(/\bws-theme-\w+\b/g, '').trim();
+    if (theme) paper.classList.add(`ws-theme-${theme}`);
+  }
+
+  // ── SVG helpers ───────────────────────────────────────────────
+  function clockSvg(hStr, mStr) {
+    const h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
+    const cx = 55, cy = 55, r = 48;
+    const toXY = (angleDeg, len) => [
+      cx + len * Math.cos((angleDeg - 90) * Math.PI / 180),
+      cy + len * Math.sin((angleDeg - 90) * Math.PI / 180)
+    ];
+    const mAngle = (m / 60) * 360;
+    const hAngle = ((h % 12) / 12 + m / 720) * 360;
+    const [mx, my] = toXY(mAngle, 38);
+    const [hx, hy] = toXY(hAngle, 26);
+    let ticks = '';
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * 360;
+      const isMajor = i % 3 === 0;
+      const inner = r - (isMajor ? 13 : 7);
+      const [x1, y1] = toXY(a, inner);
+      const [x2, y2] = toXY(a, r);
+      ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#374151" stroke-width="${isMajor ? 2.5 : 1.2}" stroke-linecap="round"/>`;
+    }
+    return `<span class="svg-clock"><svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">` +
+      `<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="#374151" stroke-width="3"/>` +
+      ticks +
+      `<line x1="${cx}" y1="${cy}" x2="${hx.toFixed(1)}" y2="${hy.toFixed(1)}" stroke="#374151" stroke-width="4" stroke-linecap="round"/>` +
+      `<line x1="${cx}" y1="${cy}" x2="${mx.toFixed(1)}" y2="${my.toFixed(1)}" stroke="#374151" stroke-width="2.5" stroke-linecap="round"/>` +
+      `<circle cx="${cx}" cy="${cy}" r="3.5" fill="#374151"/>` +
+      `</svg></span>`;
+  }
+
+  function shapesSvg(type, countStr) {
+    const count = Math.min(Math.max(parseInt(countStr, 10), 1), 20);
+    const perRow = Math.min(count, 10);
+    const rows   = Math.ceil(count / perRow);
+    const size   = 30;
+    const gap    = 6;
+    const w      = perRow * (size + gap) - gap;
+    const h      = rows  * (size + gap) - gap;
+    let cells    = '';
+    for (let i = 0; i < count; i++) {
+      const col = i % perRow;
+      const row = Math.floor(i / perRow);
+      const x   = col * (size + gap);
+      const y   = row * (size + gap);
+      let shape;
+      switch (type.toLowerCase()) {
+        case 'square':
+          shape = `<rect x="${x+2}" y="${y+2}" width="${size-4}" height="${size-4}" fill="none" stroke="#374151" stroke-width="1.8" rx="1"/>`;
+          break;
+        case 'triangle':
+          shape = `<polygon points="${x+size/2},${y+2} ${x+size-2},${y+size-2} ${x+2},${y+size-2}" fill="none" stroke="#374151" stroke-width="1.8" stroke-linejoin="round"/>`;
+          break;
+        case 'star':
+          { const cx2=x+size/2, cy2=y+size/2, ro=size/2-2, ri=size/4-1;
+            const pts=Array.from({length:10},(_,k)=>{
+              const a=(k/10)*Math.PI*2-Math.PI/2;
+              const rd=k%2===0?ro:ri;
+              return `${(cx2+rd*Math.cos(a)).toFixed(1)},${(cy2+rd*Math.sin(a)).toFixed(1)}`;
+            }).join(' ');
+            shape=`<polygon points="${pts}" fill="none" stroke="#374151" stroke-width="1.5" stroke-linejoin="round"/>`;
+          }
+          break;
+        default: // circle
+          shape = `<circle cx="${x+size/2}" cy="${y+size/2}" r="${size/2-2}" fill="none" stroke="#374151" stroke-width="1.8"/>`;
+      }
+      cells += shape;
+    }
+    return `<div class="svg-shapes-wrap"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${cells}</svg></div>`;
+  }
+
+  // ── DALL-E image generation ────────────────────────────────────
+
+  // Words that reliably cause DALL-E to embed text regardless of prompt.
+  // These skip DALL-E entirely and display a large styled HTML visual instead.
+  const TEXT_VISUAL_WORDS = new Set([
+    'ship','fish','boat','train','bus','van','truck','plane',
+  ]);
+
+  // Emoji displayed beside the word in the HTML visual fallback
+  const WORD_EMOJI = {
+    ship:'🚢', fish:'🐟', boat:'⛵', train:'🚂', bus:'🚌',
+    van:'🚐', truck:'🚛', plane:'✈️', car:'🚗', bike:'🚲',
+  };
+
+  // Emoji fallbacks keyed by phonics letter-pair visible in the grid word
+  // (e.g. "fi__" → prefix "fi" → 🐟)
+  const PHONICS_EMOJI = {
+    fi:'🐟', wi:'🌬️', di:'🦖', ru:'🏃',
+    sh:'🐚', ch:'🚂', th:'🤔', wh:'🐳',
+  };
+
+  // Return a relevant emoji for a grid word like "fi__", "sh__", "___at"
+  function phonicsEmoji(gridWord) {
+    const visible = gridWord.replace(/_/g, '').toLowerCase().trim();
+    return PHONICS_EMOJI[visible.slice(0, 2)] || '🖼️';
+  }
+
+  // Large styled HTML visual used instead of a broken DALL-E image
+  function buildHtmlVisual(word) {
+    const key = word.toLowerCase().trim();
+    const emoji = WORD_EMOJI[key] || '🖼️';
+    return `<div style="display:flex;flex-direction:column;align-items:center;` +
+      `justify-content:center;height:90px;gap:4px">` +
+      `<span style="font-size:2.2rem;line-height:1">${emoji}</span>` +
+      `<span style="font-size:1.25rem;font-weight:bold;font-family:serif;` +
+      `color:#1f2937;letter-spacing:0.03em">${word}</span></div>`;
+  }
+
+  function buildDallePrompt(word, yearGroup) {
+    const yg = (yearGroup || '').toLowerCase();
+    const key = word.toLowerCase().trim();
+
+    // Word-specific overrides for words DALL-E commonly gets wrong
+    const overrides = {
+      moon:   'crescent moon shape, simple black outline drawing, no face',
+      book:   'open book showing blank pages, simple black outline drawing, no text on pages',
+      spoon:  'kitchen spoon, simple black outline drawing, side view',
+      foot:   'single human foot, simple black outline drawing, side view',
+      feet:   'single human foot, simple black outline drawing, side view',
+      boot:   'wellington boot, simple black outline drawing, side view',
+      tree:   'simple tree with trunk and round crown, black outline drawing',
+      bee:    'simple cartoon bee, black outline drawing, side view',
+      see:    'wide open eye, simple black outline drawing',
+      sea:    'gentle ocean waves, simple black outline drawing',
+      food:   'plate of food with fork, simple black outline drawing',
+      good:   'thumbs up gesture, simple black outline drawing',
+      wood:   'wooden log, simple black outline drawing',
+      hood:   'hooded cloak, simple black outline drawing',
+      look:   'magnifying glass, simple black outline drawing',
+      cook:   'chef hat and spoon, simple black outline drawing',
+      hook:   'simple fishing hook, black outline drawing',
+      pool:   'simple swimming pool shape, black outline drawing, top view',
+      tool:   'hammer, simple black outline drawing',
+      cool:   'ice cube, simple black outline drawing',
+      // Transport — abstract shape descriptions to avoid DALL-E adding text
+      ship:    'large oval hull shape with a small rectangle on top, simple black outline, no text, isolated on white',
+      fish:    'simple fish silhouette shape, oval body with triangle tail, black outline only, no text, isolated on white',
+      boat:    'simple curved hull shape with a vertical mast line, black outline only, no text, isolated on white',
+      train:   'two rectangles side by side with two small circles below for wheels, black outline only, no text, isolated on white',
+      bus:     'wide rectangle with two small circles at bottom for wheels, black outline only, no text, isolated on white',
+      van:     'medium rectangle with one small circle for a wheel, black outline only, no text, isolated on white',
+      truck:   'two rectangles — small cab and large cargo box — two circles below, black outline only, no text, isolated on white',
+      plane:   'elongated oval body with two swept triangle wings, black outline only, no text, isolated on white',
+      car:     'rounded rectangle body with two circles below for wheels, black outline only, no text, isolated on white',
+      bike:    'two circles connected by diagonal lines, simple bicycle silhouette, black outline only, no text, isolated on white',
+      // Buildings and scenes — force single object, centred
+      shop:    'single friendly cartoon shop front with an awning, simple black outline, single object only, centred, isolated on white background',
+      shell:   'single sea shell, spiral shape, simple black outline drawing, isolated on white',
+      house:   'single simple house with triangular roof, simple black outline drawing, single object only, isolated on white',
+      home:    'single simple house with triangular roof, simple black outline drawing, single object only, isolated on white',
+      school:  'single simple school building with windows, simple black outline drawing, single object only, isolated on white',
+      church:  'single simple church with steeple, simple black outline drawing, single object only, isolated on white',
+      castle:  'single simple castle with two turrets, simple black outline drawing, single object only, isolated on white',
+      farm:    'single simple barn building with a roof, simple black outline drawing, single object only, isolated on white',
+      park:    'single park bench with a tree beside it, simple black outline drawing, isolated on white',
+      town:    'single simple building with a door and windows, simple black outline drawing, single object only, isolated on white',
+      city:    'single simple tall building, simple black outline drawing, single object only, isolated on white',
+      street:  'single simple road sign post, simple black outline drawing, isolated on white',
+      market:  'single market stall with awning, simple black outline drawing, single object only, isolated on white',
+    };
+
+    const suffix = ', single object only, centred, isolated on white background, simple black outline only, absolutely no text, no words, no letters, no labels, no signs, no writing of any kind anywhere in the image, no face, black and white, suitable for photocopying';
+
+    if (overrides[key]) return overrides[key] + suffix;
+
+    if (yg.includes('p1') || yg.includes('p2') || yg.includes('foundation'))
+      return `Simple black and white line drawing of a ${word}, child-friendly, clean, worksheet illustration style, no shading` + suffix;
+    if (yg.includes('p3') || yg.includes('p4') || yg.includes('key stage 1'))
+      return `Simple black and white illustration of ${word}, clean, educational worksheet style, no background` + suffix;
+    if (yg.includes('p5') || yg.includes('p6'))
+      return `Clean black and white educational illustration of ${word}, suitable for primary school worksheet, minimal detail` + suffix;
+    if (yg.includes('p7'))
+      return `Minimal black and white icon of ${word}, clean, professional, suitable for an exam style worksheet` + suffix;
+    return `Simple black and white illustration of ${word}, educational worksheet style, no background` + suffix;
+  }
+
+  function wsImgSize(yearGroup) {
+    const yg = (yearGroup || '').toLowerCase();
+    if (yg.includes('p7')) return 'p7';
+    if (yg.includes('p5') || yg.includes('p6')) return 'ks2';
+    return 'ks1'; // P3/P4 and anything else
+  }
+
+  async function generateDalleImage(prompt, openAIKey) {
+    const resp = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openAIKey}`
+      },
+      body: JSON.stringify({
+        model: 'dall-e-3',
+        prompt,
+        n: 1,
+        size: '1024x1024',
+        response_format: 'url'
+      })
+    });
+    if (!resp.ok) {
+      const errText = await resp.text().catch(() => '');
+      throw new Error(`DALL-E HTTP ${resp.status}: ${errText.slice(0, 200)}`);
+    }
+    const data = await resp.json();
+    const entry = data.data[0];
+    // Accept whichever format DALL-E actually returns
+    if (entry.url) {
+      console.log('  [dall-e] got URL:', entry.url.slice(0, 80) + '...');
+      return entry.url;
+    }
+    if (entry.b64_json) {
+      console.log('  [dall-e] got b64_json, length:', entry.b64_json.length);
+      return `data:image/png;base64,${entry.b64_json}`;
+    }
+    throw new Error('DALL-E response had neither url nor b64_json');
+  }
+
+  // Foundation Stage: inject images into pre-created grid item slots
+  async function injectFSImages(imgWords, openAIKey, yearGroup) {
+    await Promise.all(imgWords.map(async (word, i) => {
+      const slot = document.getElementById(`fsimg-${i}`);
+      if (!slot) return;
+      slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
+      try {
+        const src = await generateDalleImage(buildDallePrompt(word, yearGroup), openAIKey);
+        slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}">`;
+        const parent = slot.closest('.ws-fs-grid-item');
+        if (parent) parent.classList.add('has-img');
+      } catch (e) {
+        console.warn(`FS image failed for "${word}":`, e);
+        slot.innerHTML = '<span style="font-size:2.5rem;line-height:1;display:flex;align-items:center;justify-content:center;width:90px;height:90px">🖼️</span>';
+      }
+    }));
+  }
+
+  // KS1/KS2/P7: inject an illustration row into the top of #output
+  async function injectWSImages(imgWords, openAIKey, yearGroup) {
+    const outputEl = document.getElementById('output');
+    if (!outputEl) return;
+
+    const sizeClass = wsImgSize(yearGroup);
+    const row = document.createElement('div');
+    row.className = `ws-img-row ws-img-row-${sizeClass}`;
+    row.id = 'ws-img-row';
+
+    imgWords.forEach((word, i) => {
+      const slot = document.createElement('div');
+      slot.className = 'ws-img-slot';
+      slot.id = `wsimg-${i}`;
+      slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
+      row.appendChild(slot);
+    });
+
+    // Insert after the first <hr> (after worksheet header block) or at top of content
+    const hr = outputEl.querySelector('hr');
+    if (hr && hr.nextSibling) {
+      outputEl.insertBefore(row, hr.nextSibling);
+    } else {
+      outputEl.prepend(row);
+    }
+
+    await Promise.all(imgWords.map(async (word, i) => {
+      const slot = document.getElementById(`wsimg-${i}`);
+      if (!slot) return;
+      try {
+        const src = await generateDalleImage(buildDallePrompt(word, yearGroup), openAIKey);
+        slot.innerHTML = `<img src="${src}" class="ws-img ws-img-${sizeClass}" alt="${word}">`;
+      } catch (e) {
+        console.warn(`WS image failed for "${word}":`, e);
+        const emojiSize = sizeClass === 'p7' ? '1.3rem' : sizeClass === 'ks2' ? '1.7rem' : '2rem';
+        slot.innerHTML = `<span style="font-size:${emojiSize};line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%">🖼️</span>`;
+      }
+    }));
+  }
+
+  // Generate all images sequentially before rendering — never skips a word.
+  // TEXT_VISUAL_WORDS skip DALL-E and get an HTML visual directly.
+  // Any failure immediately falls back to phonics emoji — never leaves a box empty.
+  async function generateAllImagesMap(imgWords, openAIKey, yearGroup) {
+    const keyStatus = openAIKey
+      ? `present (${openAIKey.slice(0, 8)}...)`
+      : 'MISSING — emoji fallback for all';
+    console.log(`[images] generating ${imgWords.length} word(s): [${imgWords.join(', ')}] | key: ${keyStatus}`);
+
+    // No key → immediately return null for every word so boxes get emoji fallbacks
+    if (!openAIKey) {
+      const map = Object.fromEntries(imgWords.map(w => [w, null]));
+      console.log('[images] no key — all words set to emoji fallback');
+      return map;
+    }
+
+    const map = {};
+    for (const word of imgWords) {
+      const key = word.toLowerCase().trim();
+      if (TEXT_VISUAL_WORDS.has(key)) {
+        map[word] = 'html:' + buildHtmlVisual(key);
+        console.log(`  "${word}" → html-visual (skipping DALL-E)`);
+        continue;
+      }
+      try {
+        map[word] = await generateDalleImage(buildDallePrompt(word, yearGroup), openAIKey);
+        console.log(`  "${word}" → DALL-E success`);
+      } catch (e) {
+        console.warn(`  "${word}" → DALL-E failed (${e.message || e}) — emoji fallback`);
+        map[word] = null;
+      }
+    }
+
+    // Verify every word has an entry — patch any gaps defensively
+    for (const word of imgWords) {
+      if (!(word in map)) {
+        console.warn(`  "${word}" missing from map — adding emoji fallback`);
+        map[word] = null;
+      }
+    }
+
+    const summary = Object.fromEntries(
+      Object.entries(map).map(([k, v]) =>
+        [k, v === null ? 'emoji' : v.startsWith('html:') ? 'html-visual' : 'dall-e-image']
+      )
+    );
+    console.log('[images] complete:', summary);
+    return map;
+  }
+
+  // ── Foundation Stage SVG & layout helpers ─────────────────────
+  function miniShapeSvg(type) {
+    const s = 50, cx = 25, cy = 25;
+    let shape;
+    switch (type.toLowerCase()) {
+      case 'square':
+        shape = `<rect x="5" y="5" width="40" height="40" fill="none" stroke="#1f2937" stroke-width="3" rx="2"/>`;
+        break;
+      case 'triangle':
+        shape = `<polygon points="${cx},5 ${s-4},${s-4} 4,${s-4}" fill="none" stroke="#1f2937" stroke-width="3" stroke-linejoin="round"/>`;
+        break;
+      case 'star':
+        { const ro = cx-3, ri = cx/2-1;
+          const pts = Array.from({length:10}, (_,k) => {
+            const a = (k/10)*Math.PI*2 - Math.PI/2;
+            const r = k%2===0 ? ro : ri;
+            return `${(cx+r*Math.cos(a)).toFixed(1)},${(cy+r*Math.sin(a)).toFixed(1)}`;
+          }).join(' ');
+          shape = `<polygon points="${pts}" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-linejoin="round"/>`;
+        }
+        break;
+      default: // circle
+        shape = `<circle cx="${cx}" cy="${cy}" r="${cx-3}" fill="none" stroke="#1f2937" stroke-width="3"/>`;
+    }
+    return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">${shape}</svg>`;
+  }
+
+  function fsCountShapes(type, countStr) {
+    const count = Math.min(Math.max(parseInt(countStr, 10) || 1, 1), 12);
+    const perRow = Math.min(count, 6);
+    const rows   = Math.ceil(count / perRow);
+    const size = 36, gap = 7;
+    const w = perRow * (size + gap) - gap;
+    const h = rows  * (size + gap) - gap;
+    let cells = '';
+    for (let i = 0; i < count; i++) {
+      const col = i % perRow, row = Math.floor(i / perRow);
+      const x = col * (size + gap), y = row * (size + gap);
+      let shape;
+      switch (type.toLowerCase()) {
+        case 'square':
+          shape = `<rect x="${x+3}" y="${y+3}" width="${size-6}" height="${size-6}" fill="none" stroke="#1f2937" stroke-width="2" rx="1"/>`;
+          break;
+        case 'triangle':
+          shape = `<polygon points="${x+size/2},${y+3} ${x+size-3},${y+size-3} ${x+3},${y+size-3}" fill="none" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/>`;
+          break;
+        case 'star':
+          { const cx2=x+size/2, cy2=y+size/2, ro=size/2-3, ri=size/4;
+            const pts=Array.from({length:10},(_,k)=>{
+              const a=(k/10)*Math.PI*2-Math.PI/2;
+              const r=k%2===0?ro:ri;
+              return `${(cx2+r*Math.cos(a)).toFixed(1)},${(cy2+r*Math.sin(a)).toFixed(1)}`;
+            }).join(' ');
+            shape=`<polygon points="${pts}" fill="none" stroke="#1f2937" stroke-width="1.8" stroke-linejoin="round"/>`;
+          }
+          break;
+        default:
+          shape = `<circle cx="${x+size/2}" cy="${y+size/2}" r="${size/2-3}" fill="none" stroke="#1f2937" stroke-width="2"/>`;
+      }
+      cells += shape;
+    }
+    return `<div class="svg-shapes-wrap"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${cells}</svg></div>`;
+  }
+
+  function fsWordGrid(wordsStr, imgWords = [], imageMap = null) {
+    const words = wordsStr.split(',').map(w => w.trim()).filter(Boolean);
+    function makeEmojiCell(gridWord) {
+      const e = phonicsEmoji(gridWord);
+      return `<div class="ws-fs-img-slot"><span style="font-size:2.5rem;line-height:1;` +
+        `display:flex;align-items:center;justify-content:center;width:90px;height:90px">${e}</span></div>`;
+    }
+    function makeTextCell(label) {
+      // Absolute last resort: bordered box with word text — never an empty box
+      return `<div class="ws-fs-img-slot"><div style="width:90px;height:90px;border:2.5px solid #1f2937;` +
+        `border-radius:4px;display:flex;align-items:center;justify-content:center;padding:4px">` +
+        `<span style="font-size:1.1rem;font-weight:bold;color:#1f2937;text-align:center;line-height:1.2">` +
+        `${label}</span></div></div>`;
+    }
+    const items = words.map((word, i) => {
+      const rendered = word.replace(/_{2,}/g, () => '<span class="ws-fs-blank"></span>');
+      let imgContent = '';
+      if (imageMap !== null) {
+        if (i < imgWords.length) {
+          const src = imageMap[imgWords[i]];
+          if (src && src.startsWith('html:')) {
+            imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
+          } else if (src) {
+            imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}"></div>`;
+          } else {
+            imgContent = makeEmojiCell(word);
+          }
+        } else {
+          imgContent = makeEmojiCell(word);
+        }
+        // Absolute last resort — should never trigger, but guarantees no empty box
+        if (!imgContent) imgContent = makeTextCell(imgWords[i] || word.replace(/_/g, '').trim() || '?');
+      }
+      return `<div class="ws-fs-grid-item">${imgContent}<div class="ws-fs-word">${rendered}</div></div>`;
+    }).join('');
+    return `<div class="ws-fs-grid">${items}</div>`;
+  }
+
+  function fsCountGrid(itemsStr, imgWords = [], imageMap = null) {
+    const emojiCell = '<div class="ws-fs-img-slot"><span style="font-size:2.5rem;line-height:1;' +
+      'display:flex;align-items:center;justify-content:center;width:90px;height:90px">🖼️</span></div>';
+    const items = itemsStr.split(',').map((item, i) => {
+      const [shape, count] = item.trim().split(':');
+      const svgHtml = fsCountShapes(shape || 'circle', count || '3');
+      let imgContent = '';
+      let hasImgClass = '';
+      if (imageMap !== null && i < imgWords.length) {
+        const src = imageMap[imgWords[i]];
+        if (src && src.startsWith('html:')) {
+          imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
+          hasImgClass = ' has-img';
+        } else if (src) {
+          imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}"></div>`;
+          hasImgClass = ' has-img';
+        } else {
+          imgContent = emojiCell;
+        }
+      }
+      const fallbackCls = imgContent ? ' ws-fs-count-fallback' : '';
+      return `<div class="ws-fs-grid-item${hasImgClass}">${imgContent}<div class="${fallbackCls.trim()}">${svgHtml}</div><span class="write-box"></span></div>`;
+    }).join('');
+    return `<div class="ws-fs-grid">${items}</div>`;
+  }
+
+  function fsSequence(numbersStr) {
+    const items = numbersStr.split(',');
+    let inner = '';
+    items.forEach((n, i) => {
+      n = n.trim();
+      if (i > 0) inner += '<div class="ws-fs-bead-connector"></div>';
+      inner += n === '_'
+        ? '<div class="ws-fs-bead ws-fs-bead-blank"></div>'
+        : `<div class="ws-fs-bead">${n}</div>`;
+    });
+    return `<div class="ws-fs-seq">${inner}</div>`;
+  }
+
+  function fsPattern(shapesStr) {
+    const items = shapesStr.split(',').map(shape => {
+      shape = shape.trim();
+      return shape === '_'
+        ? `<div class="ws-fs-pattern-item ws-fs-pattern-blank"></div>`
+        : `<div class="ws-fs-pattern-item">${miniShapeSvg(shape)}</div>`;
+    }).join('');
+    return `<div class="ws-fs-pattern">${items}</div>`;
+  }
+
+  // ── Markdown → HTML ───────────────────────────────────────────
+  function markdownToHtml(text, imageMap = null) {
+    // Detect FS content up-front so we can suppress elements that don't belong
+    // above the word grid (e.g. the decorative emoji row)
+    const isFSContent = text.includes('[FS]') || /\[FS_(?:WORD|COUNT)_GRID:/.test(text);
+
+    // Issue 1: For Foundation Stage worksheets, hard-strip meta lines from the
+    // child-facing section regardless of what the AI outputs. These fields only
+    // appear after [ANSWER_KEY]. Split on [ANSWER_KEY] so we never strip from
+    // the teacher section.
+    if (text.includes('[FS]')) {
+      const akIdx = text.indexOf('[ANSWER_KEY]');
+      const childText = akIdx !== -1 ? text.slice(0, akIdx) : text;
+      const teacherText = akIdx !== -1 ? text.slice(akIdx) : '';
+      const stripped = childText
+        .replace(/^\*\*Area of Learning:\*\*[^\n]*\n?/gm, '')
+        .replace(/^\*\*Year Group:\*\*[^\n]*\n?/gm, '')
+        .replace(/^\*\*Learning Objective:\*\*[^\n]*\n?/gm, '');
+      text = stripped + teacherText;
+    }
+
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    // ── Tables ──────────────────────────────────────────────────
+    html = html.replace(/^(\|.+\|\n)((?:\|.+\|\n?)+)/gm, (match) => {
+      const rows   = match.trim().split('\n').filter(r => !/^\|[-:| ]+\|$/.test(r.trim()));
+      if (rows.length < 2) return match;
+      const header = rows[0].split('|').filter((_, i, a) => i > 0 && i < a.length - 1);
+      const body   = rows.slice(1);
+      const thead  = '<tr>' + header.map(h => `<th>${h.trim()}</th>`).join('') + '</tr>';
+      const tbody  = body.map(r => {
+        const cells = r.split('|').filter((_, i, a) => i > 0 && i < a.length - 1);
+        return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+      }).join('');
+      return `<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
+    });
+
+    // ── Blockquotes (&gt; because > is already escaped) ─────────
+    html = html.replace(/((?:^&gt; .+\n?)+)/gm, (match) => {
+      const inner = match.replace(/^&gt; /gm, '').trim();
+      return `<blockquote>${inner}</blockquote>`;
+    });
+
+    // ── Standalone answer lines (8+ underscores on own line) ────
+    html = html.replace(/^_{8,}$/gm, '<div class="answer-line"></div>');
+
+    // ── Writing lines [LINES:n] ──────────────────────────────────
+    html = html.replace(/\[LINES:(\d+)\]/g, (_, n) => {
+      const count = Math.min(Math.max(parseInt(n), 1), 12);
+      const lines = Array.from({length: count}, () => '<div class="writing-line"></div>').join('');
+      return `<div class="writing-lines">${lines}</div>`;
+    });
+
+    // ── Working box [WORKING] ────────────────────────────────────
+    html = html.replace(/\[WORKING\]/g,
+      '<div class="working-box"><div class="working-label">Show your working</div>' +
+      '<div class="working-line"></div><div class="working-line"></div>' +
+      '<div class="working-line"></div></div>'
+    );
+
+    // ── Number line [NUMBER_LINE:start:end] ──────────────────────
+    html = html.replace(/\[NUMBER_LINE:(\d+):(\d+)\]/g, (_, s, e) => {
+      const start = parseInt(s), end = Math.min(parseInt(e), start + 30);
+      let inner = '';
+      for (let i = start; i <= end; i++) {
+        inner += `<div class="nl-item"><div class="nl-tick"></div><span class="nl-num">${i}</span></div>`;
+        if (i < end) inner += '<div class="nl-seg"></div>';
+      }
+      return `<div class="number-line-wrap"><div class="number-line">${inner}</div></div>`;
+    });
+
+    // ── Clock faces [CLOCK:H:MM] ─────────────────────────────────
+    html = html.replace(/\[CLOCK:(\d{1,2}):(\d{2})\]/g, (_, h, m) => clockSvg(h, m));
+
+    // ── Counting shapes [SHAPES:type:count] ──────────────────────
+    html = html.replace(/\[SHAPES:(\w+):(\d+)\]/g, (_, type, n) => shapesSvg(type, n));
+
+    // ── Word boxes [WORDBOX:w1,w2,...] ───────────────────────────
+    html = html.replace(/\[WORDBOX:([^\]]+)\]/g, (_, words) => {
+      const boxes = words.split(',').map(w =>
+        `<span class="word-box">${w.trim()}</span>`
+      ).join('');
+      return `<div class="word-bank-panel"><span class="word-bank-label">Word Bank</span><div class="word-box-row">${boxes}</div></div>`;
+    });
+
+    // ── Speech bubbles [BUBBLE:text] ─────────────────────────────
+    html = html.replace(/\[BUBBLE:([^\]]+)\]/g, (_, text) =>
+      `<div class="speech-bubble">${text.trim()}</div>`
+    );
+
+    // ── Topic emoji row [EMOJIS:🔬🌿🐸] ─────────────────────────
+    // Suppressed for FS worksheets — nothing should appear above the grid
+    // except the title and the Name/Date line
+    html = html.replace(/\[EMOJIS:([^\]]+)\]/g, (_, emojis) =>
+      isFSContent ? '' : `<div class="ws-emoji-row">${emojis.trim()}</div>`
+    );
+
+    // ── Theme marker [THEME:name] — strip, applied via JS ─────────
+    html = html.replace(/\[THEME:[^\]]+\]/g, '');
+
+    // ── Foundation Stage marker [FS] — strip, applied via JS ──────
+    html = html.replace(/\[FS\]/g, '');
+
+    // ── Answer key page break [ANSWER_KEY] ────────────────────────
+    html = html.replace(/\[ANSWER_KEY\]/g,
+      '<div class="ws-answer-key-page"><span class="ws-answer-key-header">Teacher Answer Key — Do Not Distribute</span>'
+    );
+    // Close the answer-key-page div at the very end if it was opened
+    if (html.includes('ws-answer-key-page')) {
+      html = html + '</div>';
+    }
+
+    // ── Write-in box [WRITEBOX] ───────────────────────────────────
+    html = html.replace(/\[WRITEBOX\]/g, '<span class="write-box"></span>');
+
+    // ── Image words [WS_IMGWORDS] / [FS_IMGWORDS] (compat) ─────────
+    // Extract before processing grids so we can pass to FS renderers
+    let fsImgWords = [];
+    const wsImgMatch = html.match(/\[(?:WS|FS)_IMGWORDS:([^\]]+)\]/);
+    if (wsImgMatch) {
+      fsImgWords = wsImgMatch[1].split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
+    }
+    html = html.replace(/\[(?:WS|FS)_IMGWORDS:[^\]]+\]/g, '');
+
+    // ── Foundation Stage: Word Grid [FS_WORD_GRID:___at,___og,...] ─
+    html = html.replace(/\[FS_WORD_GRID:([^\]]+)\]/g, (_, words) => fsWordGrid(words, fsImgWords, imageMap));
+
+    // ── Foundation Stage: Count Grid [FS_COUNT_GRID:circle:3,...] ─
+    html = html.replace(/\[FS_COUNT_GRID:([^\]]+)\]/g, (_, items) => fsCountGrid(items, fsImgWords, imageMap));
+
+    // ── Foundation Stage: Sequence [FS_SEQUENCE:1,2,_,4,...] ──────
+    html = html.replace(/\[FS_SEQUENCE:([^\]]+)\]/g, (_, nums) => fsSequence(nums));
+
+    // ── Foundation Stage: Pattern [FS_PATTERN:circle,square,...] ──
+    html = html.replace(/\[FS_PATTERN:([^\]]+)\]/g, (_, shapes) => fsPattern(shapes));
+
+    // ── Two-column blocks [COLS:2] / [/COLS] ────────────────────
+    html = html.replace(/\[COLS:2\]/g, '<div class="ws-cols2">');
+    html = html.replace(/\[\/COLS\]/g, '</div>');
+
+    // ── Section bars → subtle dividers ───────────────────────────
+    html = html.replace(/^## 🟢 (.+)$/gm, '<div class="ws-section-divider"><span class="ws-section-divider-inner">$1</span></div>');
+    html = html.replace(/^## 🟡 (.+)$/gm, '<div class="ws-section-divider"><span class="ws-section-divider-inner">$1</span></div>');
+    html = html.replace(/^## 🔴 (.+)$/gm, '<div class="ws-section-divider"><span class="ws-section-divider-inner">$1</span></div>');
+
+    // ── Headings ─────────────────────────────────────────────────
+    html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^### (.+)$/gm,  '<h3>$1</h3>');
+    html = html.replace(/^## (.+)$/gm,   '<h2>$1</h2>');
+    html = html.replace(/^# (.+)$/gm,    '<h1>$1</h1>');
+    html = html.replace(/^---+$/gm, '<hr>');
+
+    // ── Bold / italic ────────────────────────────────────────────
+    html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.+?)\*\*/g,     '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g,          '<em>$1</em>');
+    html = html.replace(/_(.+?)_/g,            '<em>$1</em>');
+
+    // ── Fill-in-blank [___] ──────────────────────────────────────
+    html = html.replace(/\[_{3,}\]/g, '<span class="fill-blank"></span>');
+
+    // ── Multiple choice A) B) C) D) groups ──────────────────────
+    const mcLines = html.split('\n');
+    const mcOut   = [];
+    let mi = 0;
+    while (mi < mcLines.length) {
+      if (/^[A-D]\) /.test(mcLines[mi])) {
+        const opts = [];
+        while (mi < mcLines.length && /^[A-D]\) /.test(mcLines[mi])) {
+          opts.push(mcLines[mi]);
+          mi++;
+        }
+        if (opts.length >= 2) {
+          const items = opts.map(o => {
+            const letter = o[0];
+            const label  = o.slice(3).trim();
+            return `<div class="mc-opt"><span class="mc-letter">${letter}</span><span>${label}</span></div>`;
+          }).join('');
+          mcOut.push(`<div class="mc-options">${items}</div>`);
+        } else {
+          mcOut.push(...opts);
+        }
+      } else {
+        mcOut.push(mcLines[mi]);
+        mi++;
+      }
+    }
+    html = mcOut.join('\n');
+
+    // ── Unordered lists ──────────────────────────────────────────
+    html = html.replace(/((?:^[-*] .+\n?)+)/gm, (match) => {
+      const items = match.trim().split('\n').map(l => `<li>${l.replace(/^[-*] /, '').trim()}</li>`).join('');
+      return `<ul>${items}</ul>`;
+    });
+
+    // ── Numbered question lines — parses star difficulty markers ──
+    html = html.replace(/^(\d+)\. (.+)$/gm, (_, num, body) => {
+      let level = '', stars = '';
+      if      (body.includes('[★★★]')) { level = 'ws-q-level-3'; stars = '★★★'; body = body.replace('[★★★]', '').trim(); }
+      else if (body.includes('[★★]'))  { level = 'ws-q-level-2'; stars = '★★';  body = body.replace('[★★]',  '').trim(); }
+      else if (body.includes('[★]'))   { level = 'ws-q-level-1'; stars = '★';   body = body.replace('[★]',   '').trim(); }
+      const starsHtml = stars ? `<span class="ws-q-stars">${stars}</span>` : '';
+      return `<div class="ws-q ${level}"><span class="ws-q-num">${num}.</span><div class="ws-q-body">${body}</div>${starsHtml}</div>`;
+    });
+
+    // ── Answer key boxes ─────────────────────────────────────────
+    html = html.replace(/^(Answer[s]?: .+)$/gm, '<div class="answer-box">$1</div>');
+
+    // ── Paragraphs ───────────────────────────────────────────────
+    html = html.replace(/^(?!<[houdtbas]).+$/gm, (line) => {
+      if (!line.trim()) return '';
+      return `<p>${line}</p>`;
+    });
+
+    html = html.replace(/\n{3,}/g, '\n\n');
+    return html;
+  }
+
+  // ── Generate ──────────────────────────────────────────────────
+  async function generate() {
+    // Usage gate — check before anything else
+    if (getUsageCount() >= 5) {
+      const panel = document.getElementById('upgrade-panel');
+      panel.classList.add('open');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const key = getKey();
+    if (!key) {
+      document.getElementById('key-panel').classList.add('open');
+      keyInput.focus();
+      keyInput.style.borderColor = '#ef4444';
+      setTimeout(() => keyInput.style.borderColor = '', 2000);
+      return;
+    }
+
+    const prompt = document.getElementById('prompt').value.trim();
+    if (!prompt) {
+      const ta = document.getElementById('prompt');
+      ta.style.outline = '2px solid #ef4444';
+      ta.focus();
+      setTimeout(() => ta.style.outline = '', 2000);
+      return;
+    }
+
+    const includeAnswers = document.getElementById('include-answers').value;
+    const yearGroup      = document.getElementById('year-group').value;
+    const subject        = document.getElementById('subject').value;
+    const focusContext   = document.getElementById('focus-context').value.trim();
+
+    const btn           = document.getElementById('generate-btn');
+    const outputSection = document.getElementById('output-section');
+    const outputEl      = document.getElementById('output');
+    const outputDot     = document.getElementById('output-dot');
+    const loadingSkel   = document.getElementById('gen-loading');
+    const printBtn      = document.getElementById('print-btn-big');
+
+    btn.disabled = true;
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Generating…`;
+
+    printBtn.classList.remove('show');
+    applyTheme('');
+    outputEl.classList.remove('ws-fs');
+    document.getElementById('worksheet-paper').classList.remove('ws-fs');
+    injectHeaderIcon(subject);
+    outputSection.style.display = 'block';
+    outputEl.innerHTML = '';
+    outputEl.classList.remove('streaming');
+    loadingSkel.classList.add('active');
+    outputDot.classList.add('active');
+    outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    startLoadingMessages();
+
+    const systemPrompt = `You are an expert Northern Ireland primary school teacher with deep knowledge of the Northern Ireland Curriculum. You create high quality, classroom-ready teaching resources.
+
+═══════════════════════════════════════
+WORKSHEET OUTPUT RULES — follow exactly
+═══════════════════════════════════════
+
+START every worksheet with this header block:
+
+For P3–P7 only:
+# [Worksheet Title]
+**Area of Learning:** [NI Curriculum Area]
+**Year Group:** [P1–P7] | **Key Stage:** [Foundation Stage / KS1 / KS2]
+**Learning Objective:** Pupils will be able to [measurable outcome]
+
+For P1 and P2 (Foundation Stage) — the child's worksheet shows the title ONLY:
+# [Worksheet Title]
+Do NOT include Area of Learning, Year Group, Key Stage, or Learning Objective in the child's worksheet. Children do not need this information. These go in the teacher answer key section AFTER [ANSWER_KEY] instead (see below).
+
+---
+
+Immediately after the ---, on the very next line, output TWO markers:
+
+[EMOJIS:X] — 2-3 emoji that visually match the topic (e.g. [EMOJIS:🌿🐸🔬] for living things, [EMOJIS:🏰⚔️📜] for Vikings, [EMOJIS:➕✖️🔢] for maths). Make them relevant and visual.
+
+[THEME:name] — pick ONE theme that matches the topic: space, nature, ocean, history, science, maths, literacy
+
+STRUCTURE: The number of questions, activity types, vocabulary, and visual support must be determined by the year group. Follow the age-differentiation rules below exactly — do NOT use section heading bars.
+
+For P3 and above: mark each question with its difficulty level at the END of the question text:
+- [★] — accessible, opening questions (first 3–4 questions)
+- [★★] — standard difficulty (middle questions)
+- [★★★] — challenging (last 2–3 questions)
+
+For P1 and P2: DO NOT use star markers, numbered questions, or columns — use the Foundation Stage activity markers instead (see below).
+
+For short questions (fill-in-blank, simple short answer in P3+), group 4–6 together between [COLS:2] and [/COLS] markers to use the page in two columns.
+
+═══════════════════════════════════
+AGE-DIFFERENTIATION RULES — follow exactly based on year group
+═══════════════════════════════════
+
+FOUNDATION STAGE — P1 and P2:
+Output [FS] on the line immediately after [THEME:name]. MANDATORY for every P1/P2 worksheet.
+
+CRITICAL: Choose ONE activity type for the entire worksheet. The whole page repeats the same task. Do NOT mix types. Do NOT use numbered questions. Do NOT use star markers.
+
+Output the worksheet as:
+1. A single # heading (the activity title, e.g. "Finish the Word" or "Count and Write")
+2. One instruction line in plain text — max 8 words, written directly to the child (e.g. "Write the missing letters.")
+3. [WS_IMGWORDS:word1,word2,word3,word4] — list the 4 most visually representable COMPLETE words from your activity. For phonics (___at → cat, ___ip → ship, etc.) provide the full word. For counting, provide the name of the thing being counted. These are used to generate illustration images.
+4. ONE of the four activity markers below — nothing else
+
+────────────────────────────────────────────
+ACTIVITY A — FINISH THE WORD (phonics/spelling)
+────────────────────────────────────────────
+[FS_WORD_GRID:word1,word2,word3,word4,word5,word6,word7,word8]
+Show blanks as ___ (three underscores) at start or end of the word.
+Use 8 words sharing the same phoneme/word family. No [WORDBOX:] needed.
+
+Example for 'at' family:
+[FS_WORD_GRID:___at,___og,___en,___ig,___it,c___,h___,b___]
+
+────────────────────────────────────────────
+ACTIVITY B — COUNT AND WRITE (maths)
+────────────────────────────────────────────
+[FS_COUNT_GRID:shape:count,shape:count,shape:count,shape:count,shape:count,shape:count]
+Shape options: circle, star, square, triangle. Include 6 items.
+Child counts the shapes and writes the number in the box.
+
+Example:
+[FS_COUNT_GRID:circle:3,star:5,square:2,circle:4,triangle:6,star:1]
+
+────────────────────────────────────────────
+ACTIVITY C — MISSING NUMBERS (sequencing)
+────────────────────────────────────────────
+Output 3–4 lines, each with one [FS_SEQUENCE:...] marker.
+Use _ (underscore) for blank beads the child fills in. 6–8 numbers per row, 2–3 blanks.
+
+Example for counting to 20:
+[FS_SEQUENCE:1,2,_,4,5,_,7]
+[FS_SEQUENCE:8,_,10,_,12,13,_]
+[FS_SEQUENCE:14,15,_,17,_,19,20]
+
+────────────────────────────────────────────
+ACTIVITY D — SHAPE PATTERN (maths patterns)
+────────────────────────────────────────────
+Output 4 lines, each with one [FS_PATTERN:...] marker.
+Use _ for the missing shape. Shape options: circle, square, triangle, star.
+
+Example:
+[FS_PATTERN:circle,square,circle,_,circle,square]
+[FS_PATTERN:triangle,triangle,square,triangle,triangle,_]
+[FS_PATTERN:star,circle,star,circle,_,circle]
+[FS_PATTERN:square,square,triangle,square,_,triangle]
+
+────────────────────────────────────────────
+
+Choose the activity type that best matches the topic. Use [EMOJIS:] before the title. Use [THEME:] and [FS] right after the header block. Do NOT use [COLS:2], [WORKING], [LINES:], [___], or numbered questions for Foundation Stage.
+
+KEY STAGE 1 — P3 and P4:
+- 6–8 questions.
+- Mix of: circling answers, short answers (1–2 words), fill-in-the-blank, and 1–2 simple sentence writing activities.
+- Simple word problems in maths (single-step only).
+- Use answer lines (________________) rather than full [LINES:] boxes for most questions.
+- Vocabulary appropriate for 7–9 year olds.
+- Some [EMOJIS:] and [WORDBOX:] markers to support but less reliant on visuals.
+- [COLS:2] can be used for simple fill-in-blank or short answer questions.
+- Output [WS_IMGWORDS:word1,word2,word3] immediately after [THEME:name] — 2–3 concrete, picturable nouns that represent the topic (e.g. for a story about farms: [WS_IMGWORDS:cow,tractor,barn]).
+
+KEY STAGE 2 LOWER — P5 and P6:
+- 8–10 questions.
+- Mix of short answers, full sentence responses, and at least one extended task.
+- Maths: include multi-step word problems with [WORKING] space.
+- Literacy: include a short comprehension or writing task with [LINES:5].
+- More challenging vocabulary introduced with context clues in the question.
+- Visuals used selectively — only [WORDBOX:] for key subject vocabulary.
+- [COLS:2] for grouped short-answer questions.
+- Output [WS_IMGWORDS:word1,word2] immediately after [THEME:name] — 1–2 concrete topic nouns for a small supporting illustration (e.g. for Vikings: [WS_IMGWORDS:viking,longship]).
+
+KEY STAGE 2 UPPER — P7:
+- 10–12 questions.
+- SEAG transfer test awareness: mix of multiple choice (A/B/C/D format) and free-response questions.
+- English: comprehension passage followed by inference/retrieval questions, grammar and punctuation task, one extended writing task with [LINES:8].
+- Maths: number, problem solving and reasoning — multi-step problems expected, [WORKING] space for each.
+- No visual aids needed — text-based like the actual transfer test.
+- High-level vocabulary; no word banks.
+- [COLS:2] for grouped multiple-choice or short-answer questions.
+- Output [WS_IMGWORDS:word1] immediately after [THEME:name] — exactly 1 topic noun for a small header illustration (e.g. for climate change: [WS_IMGWORDS:earth]).
+
+Example output for P2 maths — counting:
+
+# Count and Write
+Count the shapes. Write the number.
+
+[EMOJIS:⭐🔢]
+[THEME:maths]
+[FS]
+
+[WS_IMGWORDS:apple,balloon,flower,butterfly]
+[FS_COUNT_GRID:circle:3,star:5,square:2,circle:4,triangle:6,star:1]
+
+---
+
+Example output for P1 English — phonics:
+
+# Finish the Word
+Write the missing letters.
+
+[EMOJIS:✏️🔤]
+[THEME:literacy]
+[FS]
+
+[WS_IMGWORDS:cat,dog,hen,pig]
+[FS_WORD_GRID:___at,___og,___en,___ig,___it,___op,___ub,___ap]
+
+---
+
+Example output for P2 maths — sequencing:
+
+# Missing Numbers
+Fill in the missing numbers.
+
+[EMOJIS:🔢🐛]
+[THEME:maths]
+[FS]
+
+[FS_SEQUENCE:1,2,_,4,5,_,7]
+[FS_SEQUENCE:_,9,10,_,12,13,_]
+[FS_SEQUENCE:14,_,16,17,_,19,20]
+
+═══════════════════════════════════
+QUESTION FORMATTING — use these exactly
+═══════════════════════════════════
+
+SHORT ANSWER questions: Put 15 underscores on the line after the question.
+Example:
+1. What is the capital city of Northern Ireland?
+________________
+
+FILL IN THE BLANK (P3 and above only): Use [___] inside the sentence to show where the word goes. It renders as an underlined blank the pupil writes on.
+Example:
+2. The River [___] runs through Belfast.
+
+WRITE-IN BOX (Foundation Stage / P1–P2 only): Use [WRITEBOX] where a child should write a word. Renders as a bordered box.
+Example:
+Write the animal name. [WRITEBOX]
+
+MULTIPLE CHOICE: List options as A) B) C) D) each on their own line (no bullet points, no numbers before them).
+Example:
+3. Which of these is a mammal?
+A) Salmon
+B) Eagle
+C) Dog
+D) Frog
+
+EXTENDED WRITING / PROBLEM SOLVING: Add [LINES:5] on the next line for writing space.
+Example:
+10. Write a paragraph describing...
+[LINES:5]
+
+MATHS WORKING SPACE: Add [WORKING] on the line after the question.
+Example:
+5. What is 47 + 36?
+[WORKING]
+________________
+
+NUMBER LINES (P1–P4 only): Add [NUMBER_LINE:0:10] on its own line where relevant.
+
+VISUAL ELEMENTS — use these markers where genuinely helpful (do not overuse):
+
+CLOCK FACES (Maths / telling time): [CLOCK:3:00] draws a clock showing 3 o'clock. Use for P1–P4 time questions. Put on its own line before or after the question.
+Example:
+6. What time does this clock show?
+[CLOCK:7:30]
+________________
+
+COUNTING SHAPES (Maths P1–P3): [SHAPES:circle:6] draws 6 circles. Types: circle, square, triangle, star.
+Example:
+2. Count the shapes. How many are there?
+[SHAPES:circle:8]
+________________
+
+WORD BANKS (Literacy / any subject): [WORDBOX:word1,word2,word3] draws a word bank. Use to provide key vocabulary.
+Example:
+Word bank: [WORDBOX:photosynthesis,chlorophyll,sunlight,oxygen]
+
+SPEECH BUBBLES (Literacy / dialogue): [BUBBLE:What are you doing?] draws a speech bubble. Use sparingly.
+Example:
+3. What is the character saying?
+[BUBBLE:I can see the castle from here!]
+
+═══════════════════════════════════
+END EVERY WORKSHEET WITH THIS EXACTLY
+═══════════════════════════════════
+
+End the worksheet immediately after the last question. Do NOT add any self-assessment, feedback, or tick-box section.
+
+${includeAnswers === 'yes'
+  ? 'After the last question, output [ANSWER_KEY] on its own line. For P1/P2 worksheets: IMMEDIATELY after [ANSWER_KEY] (before any answers), output the curriculum meta info that was omitted from the child header: **Area of Learning:** [NI Curriculum Area] | **Year Group:** P1 or P2 | **Key Stage:** Foundation Stage | **Learning Objective:** Pupils will be able to [measurable outcome]. Then write the full answers below. For P3–P7: just write the answers. Format each answer as: 1. [answer], 2. [answer], etc. The answer key MUST be completely separate — never mix answers into the worksheet questions.'
+  : 'Do NOT include question answers anywhere — this is a student copy only. For P1/P2 worksheets ONLY: STILL output [ANSWER_KEY] on its own line after the last question, then output the teacher meta info: **Area of Learning:** [NI Curriculum Area] | **Year Group:** P1 or P2 | **Key Stage:** Foundation Stage | **Learning Objective:** Pupils will be able to [measurable outcome]. This is for the teacher and must appear even without answers.'
+}
+
+Additional rules:
+- Use Northern Ireland terminology throughout: P1–P7, Foundation Stage (P1–P2), Key Stage 1 (P3–P4), Key Stage 2 (P5–P7)
+- Difficulty and format are determined automatically by year group — follow the AGE-DIFFERENTIATION RULES above exactly
+- For P1/P2: ALWAYS include [FS] after [THEME:name], [WS_IMGWORDS] (4 words), then ONE of the four FS activity markers (FS_WORD_GRID / FS_COUNT_GRID / FS_SEQUENCE / FS_PATTERN), NEVER numbered questions, NEVER star markers
+- For P3–P7: ALWAYS include [WS_IMGWORDS] immediately after [THEME:name] (3 words for P3/P4, 2 for P5/P6, 1 for P7)
+- For P7: include SEAG transfer test-style questions (multiple choice + free response) in Maths and English
+- Answer keys MUST use [ANSWER_KEY] marker and appear ONLY after the last question — never in the questions
+
+═══════════════════════════════════
+LESSON PLAN FORMAT
+═══════════════════════════════════
+
+When generating a lesson plan, include all sections in order:
+**Learning Objective** | **NI Curriculum Area of Learning** | **Key Stage** | **Duration** | **Resources Needed** | **Starter Activity (5–10 mins)** | **Main Activity (20–25 mins)** | **Plenary (5–10 mins)** | **Differentiation (support / core / extension)** | **Assessment Opportunity**
+
+Reference Thinking Skills and Personal Capabilities where relevant. Keep language practical and teacher-facing.`;
+
+    const contextParts = [];
+    if (yearGroup)    contextParts.push(yearGroup);
+    if (subject)      contextParts.push(subject);
+    if (currentStyle) contextParts.push(currentStyle);
+    const contextPrefix = contextParts.length ? `Create a ${contextParts.join(' ')} resource. ` : '';
+    const focusLine     = focusContext ? `Focus/context: ${focusContext}. ` : '';
+    const userMessage   = contextPrefix + focusLine + prompt;
+
+    let fullText   = '';
+    let firstChunk = true;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-6',
+          max_tokens: 8000,
+          stream: true,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userMessage }],
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `HTTP ${response.status}`);
+      }
+
+      const reader  = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer    = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6);
+          if (data === '[DONE]') continue;
+          try {
+            const event = JSON.parse(data);
+            if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
+              if (firstChunk) {
+                loadingSkel.classList.remove('active');
+                outputEl.classList.add('streaming');
+                firstChunk = false;
+              }
+              fullText += event.delta.text;
+              outputEl.innerHTML = markdownToHtml(fullText);
+            }
+          } catch (_) {}
+        }
+      }
+
+      outputEl.classList.remove('streaming');
+      outputDot.classList.remove('active');
+      loadingSkel.classList.remove('active');
+      stopLoadingMessages();
+      // Apply theme from [THEME:name] marker in full text
+      const themeMatch = fullText.match(/\[THEME:([\w-]+)\]/);
+      if (themeMatch) applyTheme(themeMatch[1]);
+      // Apply Foundation Stage large-text class + thick border
+      const isFS = fullText.includes('[FS]') || /\[FS_(?:WORD|COUNT)_GRID:/.test(fullText);
+      if (isFS) {
+        outputEl.classList.add('ws-fs');
+        document.getElementById('worksheet-paper').classList.add('ws-fs');
+      }
+      // DALL-E image generation — for FS: always pre-generate (or emoji-fallback)
+      // then re-render so every box has content; for non-FS: inject illustration row
+      const wsImgWordsMatch = fullText.match(/\[(?:WS|FS)_IMGWORDS:([^\]]+)\]/);
+      if (wsImgWordsMatch) {
+        const wsImgWords = wsImgWordsMatch[1].split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
+        const openAIKey = getOpenAIKey();
+        if (wsImgWords.length) {
+          if (isFS) {
+            // Always re-render FS — generateAllImagesMap handles missing key internally
+            // (returns null for every word → phonics emoji fallbacks, never empty boxes)
+            const imageMap = await generateAllImagesMap(wsImgWords, openAIKey, yearGroup);
+            outputEl.innerHTML = markdownToHtml(fullText, imageMap);
+          } else if (openAIKey) {
+            injectWSImages(wsImgWords, openAIKey, yearGroup); // creates illustration row
+          }
+        }
+      }
+      saveHistory(fullText, yearGroup, subject, currentStyle);
+      incrementUsage();
+      printBtn.classList.add('show');
+
+    } catch (err) {
+      outputEl.classList.remove('streaming');
+      outputDot.classList.remove('active');
+      loadingSkel.classList.remove('active');
+      stopLoadingMessages();
+      const { title, body } = friendlyError(err);
+      outputEl.innerHTML = `<div class="error-box">
+        <svg class="error-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div><strong>${title}</strong>${body}</div>
+      </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg> Generate Resource`;
+    }
+  }
+
+  // ── Copy ──────────────────────────────────────────────────────
+  async function copyOutput() {
+    const text = document.getElementById('output').innerText;
+    const btn  = document.getElementById('copy-btn');
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (_) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy`;
+    }, 2000);
+  }
+
+  // ── Keyboard shortcut ─────────────────────────────────────────
+  document.getElementById('prompt').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) generate();
+  });
+
+  // ── Spinner keyframe ──────────────────────────────────────────
+  const style = document.createElement('style');
+  style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+  document.head.appendChild(style);
+</script>
+
+</body>
+</html>
