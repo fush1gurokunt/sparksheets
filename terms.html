@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service — SparkSheets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:      #7c3aed;
+      --purple-dark: #5b21b6;
+      --purple-100:  #ede9fe;
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-400: #9ca3af;
+      --gray-300: #d1d5db;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --white:    #ffffff;
+      --font-ui:   'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Nunito', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: #f7f6f2;
+      color: var(--gray-700);
+      min-height: 100vh;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--purple) 0%, #9333ea 100%);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+
+    .nav-logo-name {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      display: block;
+    }
+
+    .nav-logo-name .accent { color: var(--purple); }
+
+    .nav-tagline {
+      font-family: var(--font-ui);
+      font-size: 0.67rem;
+      color: var(--gray-400);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      display: block;
+    }
+
+    .content {
+      max-width: 720px;
+      margin: 3rem auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    .page-label {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: var(--font-body);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+
+    .updated {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .card section {
+      margin-bottom: 2rem;
+    }
+
+    .card section:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.6rem;
+    }
+
+    p {
+      font-size: 0.97rem;
+      color: var(--gray-600);
+      line-height: 1.75;
+    }
+
+    .contact-line {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--gray-200);
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      color: var(--gray-500);
+    }
+
+    .contact-line a {
+      color: var(--purple);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contact-line a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      color: var(--gray-400);
+      border-top: 1px solid var(--gray-200);
+    }
+
+    footer a {
+      color: var(--gray-500);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--purple); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div>
+        <span class="nav-logo-name">Spark<span class="accent">Sheets</span></span>
+        <span class="nav-tagline">NI Curriculum worksheets, generated in seconds</span>
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div class="content">
+  <p class="page-label">Legal</p>
+  <h1>Terms of Service</h1>
+  <p class="updated">Last updated: March 2026</p>
+
+  <div class="card">
+    <section>
+      <p>By using SparkSheets you agree to these terms.</p>
+    </section>
+
+    <section>
+      <h2>The service</h2>
+      <p>SparkSheets provides an AI-powered tool for generating teaching resources aligned to the Northern Ireland Curriculum. Resources are generated using artificial intelligence and are intended as starting points for teachers to review, edit and adapt as needed.</p>
+    </section>
+
+    <section>
+      <h2>Your responsibilities</h2>
+      <p>You are responsible for reviewing all generated content before use in a classroom. You must not use SparkSheets to generate content that is harmful, discriminatory or inappropriate for children. You must be a registered teacher or educational professional to use SparkSheets.</p>
+    </section>
+
+    <section>
+      <h2>Subscription and payments</h2>
+      <p>The Pro plan is billed at £4.99 per month. You may cancel at any time and will retain access until the end of your billing period. Refunds are offered within 7 days of purchase if you are not satisfied — contact us at <a href="mailto:support@sparksheets.uk">support@sparksheets.uk</a> to request one.</p>
+    </section>
+
+    <section>
+      <h2>Intellectual property</h2>
+      <p>Resources generated using SparkSheets are yours to use freely in your teaching practice. You may not resell generated resources or use them for commercial purposes outside your own classroom.</p>
+    </section>
+
+    <section>
+      <h2>Limitation of liability</h2>
+      <p>SparkSheets provides resources as-is. We are not liable for any inaccuracies in generated content. Teachers retain professional responsibility for all materials used in their classrooms.</p>
+    </section>
+
+    <section>
+      <h2>Changes to these terms</h2>
+      <p>We may update these terms and will notify subscribers by email of any significant changes.</p>
+    </section>
+
+    <div class="contact-line">
+      Questions? Email <a href="mailto:support@sparksheets.uk">support@sparksheets.uk</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong style="color:#4b5563">SparkSheets</strong> — Built for Northern Ireland primary teachers &nbsp;·&nbsp; © 2026
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="/terms.html">Terms of Service</a>
+</footer>
+
+</body>
+</html>
