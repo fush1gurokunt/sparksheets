@@ -2911,12 +2911,9 @@
       `<div class="speech-bubble">${text.trim()}</div>`
     );
 
-    // ── Topic emoji row [EMOJIS:🔬🌿🐸] ─────────────────────────
-    // Suppressed for FS worksheets — nothing should appear above the grid
-    // except the title and the Name/Date line
-    html = html.replace(/\[EMOJIS:([^\]]+)\]/g, (_, emojis) =>
-      isFSContent ? '' : `<div class="ws-emoji-row">${emojis.trim()}</div>`
-    );
+    // ── Topic emoji row [EMOJIS:🔬🌿🐸] — always strip ──────────
+    // Topic images are DALL-E only; emoji anchors are never shown
+    html = html.replace(/\[EMOJIS:([^\]]+)\]/g, '');
 
     // ── Theme marker [THEME:name] — strip, applied via JS ─────────
     html = html.replace(/\[THEME:[^\]]+\]/g, '');
@@ -3025,6 +3022,9 @@
       const starsHtml = stars ? `<span class="ws-q-stars">${stars}</span>` : '';
       return `<div class="ws-q ${level}"><span class="ws-q-num">${num}.</span><div class="ws-q-body">${body}</div>${starsHtml}</div>`;
     });
+
+    // ── Strip any star markers that survived in non-numbered lines ─
+    html = html.replace(/\[★★★\]/g, '').replace(/\[★★\]/g, '').replace(/\[★\]/g, '');
 
     // ── Answer key boxes ─────────────────────────────────────────
     html = html.replace(/^(Answer[s]?: .+)$/gm, '<div class="answer-box">$1</div>');
