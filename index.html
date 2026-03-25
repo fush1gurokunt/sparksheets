@@ -3464,12 +3464,22 @@ Reference Thinking Skills and Personal Capabilities where relevant. Keep languag
           userMessage,
           model: 'claude-opus-4-6',
           max_tokens: 8000,
+          isPro: isPro(),
         }),
       });
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        throw new Error(err?.error?.message || `HTTP ${response.status}`);
+        if (response.status === 429 && err?.error === 'limit_reached') {
+          const panel = document.getElementById('upgrade-panel');
+          panel.classList.add('open');
+          panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Sync localStorage display to the real limit
+          localStorage.setItem('spark_usage', '5');
+          updateUsageDisplay();
+          return;
+        }
+        throw new Error(err?.error?.message || err?.error || `HTTP ${response.status}`);
       }
 
       const reader  = response.body.getReader();

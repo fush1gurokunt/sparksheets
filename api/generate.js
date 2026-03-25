@@ -1,12 +1,51 @@
+// ── IP-based usage tracking ────────────────────────────────────
+// Simple in-memory store: Map<ip, { count, firstSeen }>
+// Resets per-IP after 30 days. Pro users bypass via isPro flag.
+const FREE_LIMIT   = 5;
+const RESET_MS     = 30 * 24 * 60 * 60 * 1000; // 30 days
+const usageStore   = new Map();
+
+function getIP(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return req.socket?.remoteAddress || 'unknown';
+}
+
+function checkAndIncrement(ip) {
+  const now  = Date.now();
+  const entry = usageStore.get(ip);
+
+  if (!entry || now - entry.firstSeen > RESET_MS) {
+    usageStore.set(ip, { count: 1, firstSeen: now });
+    return { allowed: true, count: 1 };
+  }
+
+  if (entry.count >= FREE_LIMIT) {
+    return { allowed: false, count: entry.count };
+  }
+
+  entry.count += 1;
+  return { allowed: true, count: entry.count };
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { systemPrompt, userMessage, model, max_tokens } = req.body || {};
+  const { systemPrompt, userMessage, model, max_tokens, isPro } = req.body || {};
 
   if (!systemPrompt || !userMessage) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Enforce IP-based free limit (Pro users bypass)
+  if (!isPro) {
+    const ip = getIP(req);
+    const { allowed } = checkAndIncrement(ip);
+    if (!allowed) {
+      return res.status(429).json({ error: 'limit_reached' });
+    }
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
