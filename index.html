@@ -1946,6 +1946,101 @@
       .ws-fields { flex-direction: column; gap: 0.75rem; }
       select, input[type="text"] { font-size: 16px; } /* prevent iOS zoom */
     }
+
+    /* ── EMAIL GATE MODAL ──────────────────────────────── */
+    .email-gate-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(17,24,39,0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .email-gate-overlay.open { display: flex; }
+    .email-gate-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 2.25rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: var(--shadow-xl);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .email-gate-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--purple) 0%, #9333ea 100%);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+      margin-bottom: 0.25rem;
+    }
+    .email-gate-title {
+      font-family: var(--font-ui);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+    }
+    .email-gate-sub {
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      color: var(--gray-500);
+      line-height: 1.5;
+    }
+    .email-gate-input {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--gray-900);
+      outline: none;
+      transition: border-color 0.15s;
+      margin-top: 0.25rem;
+    }
+    .email-gate-input:focus { border-color: var(--purple); }
+    .email-gate-btn {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.28);
+    }
+    .email-gate-btn:hover { background: var(--purple-dark); }
+    .email-gate-note {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      color: var(--gray-400);
+      line-height: 1.5;
+    }
+    .email-gate-skip {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+    .email-gate-skip:hover { color: var(--gray-600); }
+    @media print { .email-gate-overlay { display: none !important; } }
   </style>
 </head>
 <body>
@@ -2101,7 +2196,7 @@
       Your Resource
     </div>
     <div class="ws-actions">
-      <button class="btn-sm" onclick="window.print()">
+      <button class="btn-sm" onclick="handlePrint()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
         Print / PDF
       </button>
@@ -2161,10 +2256,25 @@
     <div id="output"></div>
   </div>
 
-  <button class="print-btn-big" id="print-btn-big" onclick="window.print()">
+  <button class="print-btn-big" id="print-btn-big" onclick="handlePrint()">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
     Print this resource
   </button>
+</div>
+
+<!-- Email gate modal -->
+<div class="email-gate-overlay" id="email-gate-overlay">
+  <div class="email-gate-card">
+    <div class="email-gate-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+    </div>
+    <div class="email-gate-title">Almost there!</div>
+    <div class="email-gate-sub">Enter your email to print and save your resource.</div>
+    <input class="email-gate-input" id="email-gate-input" type="email" placeholder="your@email.com" autocomplete="email">
+    <button class="email-gate-btn" id="email-gate-btn" onclick="submitEmailGate()">Print my worksheet</button>
+    <div class="email-gate-note">We'll only email you about SparkSheets updates. Unsubscribe anytime.</div>
+    <button class="email-gate-skip" onclick="skipEmailGate()">Skip and print anyway</button>
+  </div>
 </div>
 
 <!-- Print-only footer -->
@@ -2189,6 +2299,56 @@
   if (!localStorage.getItem('spark_notice_accepted')) {
     document.getElementById('storage-notice').style.display = 'flex';
   }
+
+  // ── Email gate ────────────────────────────────────────────────
+  function handlePrint() {
+    if (localStorage.getItem('sparksheets_email')) {
+      window.print();
+      return;
+    }
+    const overlay = document.getElementById('email-gate-overlay');
+    overlay.classList.add('open');
+    setTimeout(() => document.getElementById('email-gate-input').focus(), 50);
+  }
+
+  function closeEmailGate() {
+    document.getElementById('email-gate-overlay').classList.remove('open');
+  }
+
+  function submitEmailGate() {
+    const input = document.getElementById('email-gate-input');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      input.style.borderColor = '#ef4444';
+      input.focus();
+      setTimeout(() => input.style.borderColor = '', 1500);
+      return;
+    }
+    localStorage.setItem('sparksheets_email', email);
+    closeEmailGate();
+    window.print();
+    // Fire-and-forget — never block printing if this fails
+    fetch('/api/save-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    }).catch(() => {});
+  }
+
+  function skipEmailGate() {
+    closeEmailGate();
+    window.print();
+  }
+
+  // Allow Enter key in the email input
+  document.getElementById('email-gate-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitEmailGate();
+  });
+
+  // Close overlay on backdrop click
+  document.getElementById('email-gate-overlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) skipEmailGate();
+  });
 
   // ── Usage counter (resets monthly) ───────────────────────────
   function getCurrentMonth() {
