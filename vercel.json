@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "api/generate.js": {
-      "maxDuration": 60
-    },
-    "api/generate-image.js": {
-      "maxDuration": 30
-    }
-  },
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" }
-  ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/privacy", "dest": "/privacy.html" },
