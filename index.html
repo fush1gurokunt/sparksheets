@@ -979,6 +979,56 @@
       white-space: nowrap;
     }
 
+    /* ── SECTION SEPARATOR (replaces Section A/B headings) ─ */
+    .ws-section-sep {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 1.25rem 0;
+    }
+
+    /* ── LESSON PLAN STYLES ────────────────────────────── */
+    .ws-lesson-plan h1 {
+      font-size: 1.4rem;
+      border-bottom: 2px solid var(--purple);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .lp-section-head {
+      background: #f3f0ff;
+      border-left: 3px solid var(--purple);
+      padding: 0.4rem 0.85rem;
+      margin: 1.5rem 0 0.5rem;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #3b1f8e;
+      border-radius: 0 6px 6px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .lp-field {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .lp-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      min-width: 150px;
+      flex-shrink: 0;
+    }
+    .lp-value {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--gray-700);
+    }
+
     /* ── HEADER TOPIC ICON ────────────────────────────── */
     .worksheet-paper-header { position: relative; }
     .ws-header-topic-icon {
@@ -1719,9 +1769,15 @@
       .nl-tick { background: #333; }
       .nl-num  { font-size: 7.5pt; color: #333; }
 
-      .ws-q { margin: 9pt 0 1pt; gap: 4pt; }
+      .ws-q { margin: 9pt 0 1pt; gap: 4pt; page-break-inside: avoid; }
       .ws-q-num { font-size: 10.5pt; min-width: 16pt; }
       .ws-q-body { font-size: 10.5pt; }
+      .worksheet-paper-header { page-break-after: avoid; }
+      .lp-section-head { page-break-after: avoid; background: #f3f0ff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-left: 2pt solid #7c3aed; padding: 3pt 8pt; margin: 10pt 0 4pt; font-size: 7.5pt; border-radius: 0; }
+      .lp-field { border-bottom: 0.5pt solid #eee; padding: 3pt 0; }
+      .lp-label { font-size: 7pt; min-width: 110pt; }
+      .lp-value { font-size: 9.5pt; }
+      .ws-section-sep { border-top: 0.5pt solid #ccc; margin: 10pt 0; }
 
       .svg-clock { margin: 2pt 4pt; }
       .svg-shapes-wrap { margin-bottom: 10pt; }
@@ -1751,11 +1807,8 @@
 
       .print-footer {
         display: block;
-        position: fixed;
-        bottom: 0.8cm;
-        left: 0;
-        right: 0;
         text-align: center;
+        margin-top: 1.5cm;
         font-family: Arial, sans-serif;
         font-size: 7.5pt;
         color: #aaa;
@@ -1885,6 +1938,10 @@
       .upgrade-email-row { flex-direction: column; }
       .btn-purple { width: 100%; justify-content: center; }
       .mc-options { grid-template-columns: 1fr; }
+      .ws-cols2 { grid-template-columns: 1fr; }
+      #output { overflow-x: auto; }
+      .ws-fields { flex-direction: column; gap: 0.75rem; }
+      select, input[type="text"] { font-size: 16px; } /* prevent iOS zoom */
     }
   </style>
 </head>
@@ -2235,26 +2292,49 @@
 
   // ── Surprise Me ───────────────────────────────────────────────
   const surpriseIdeas = [
+    // Maths
     { yearGroup: 'P2 (Foundation Stage)', subject: 'Maths',     prompt: 'Counting to 20 and number bonds to 10'                              },
-    { yearGroup: 'P4 (Key Stage 1)',       subject: 'English',   prompt: 'Punctuation — capital letters, full stops and question marks'        },
-    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Science',   prompt: 'Food chains — producers, consumers and predators'                    },
     { yearGroup: 'P3 (Key Stage 1)',       subject: 'Maths',     prompt: "Telling the time — o'clock and half past"                           },
-    { yearGroup: 'P6 (Key Stage 2)',       subject: 'English',   prompt: 'Persuasive writing — should school uniform be compulsory?'           },
-    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Maths',     prompt: 'Fractions, decimals and percentages — converting between them'       },
-    { yearGroup: 'P1 (Foundation Stage)', subject: 'English',   prompt: 'Initial letter sounds — s, a, t, p, i, n'                           },
-    { yearGroup: 'P5 (Key Stage 2)',       subject: 'History',   prompt: 'The Vikings — who were they and why did they come to Ireland?'       },
-    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Geography', prompt: 'Rivers of Northern Ireland — the water cycle and river features'     },
-    { yearGroup: 'P3 (Key Stage 1)',       subject: 'Science',   prompt: 'Parts of a plant and what plants need to grow'                       },
-    { yearGroup: 'P4 (Key Stage 1)',       subject: 'History',   prompt: 'Life in Victorian times — school, work and home for children'        },
-    { yearGroup: 'P7 (Key Stage 2)',       subject: 'English',   prompt: 'Figurative language — metaphor, simile and personification'          },
-    { yearGroup: 'P2 (Foundation Stage)', subject: 'Science',   prompt: 'Animals and their young — matching babies to their parents'          },
-    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Maths',     prompt: 'Area and perimeter of rectangles and compound shapes'                },
-    { yearGroup: 'P6 (Key Stage 2)',       subject: 'PSHE',      prompt: 'Online safety — staying safe and responsible on the internet'        },
-    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Geography', prompt: 'Climate change — causes, effects and what we can do in NI'           },
     { yearGroup: 'P4 (Key Stage 1)',       subject: 'Maths',     prompt: 'Multiplication tables — 3, 4 and 8 times tables'                    },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Maths',     prompt: 'Area and perimeter of rectangles and compound shapes'                },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Maths',     prompt: 'Fractions, decimals and percentages — converting between them'       },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Maths',     prompt: 'Long division and problem solving with remainders'                   },
     { yearGroup: 'P1 (Foundation Stage)', subject: 'Maths',     prompt: 'Shapes — recognising circles, squares, triangles and rectangles'     },
-    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Science',   prompt: 'The Solar System — planets, the Moon and space exploration'          },
+    // English
+    { yearGroup: 'P1 (Foundation Stage)', subject: 'English',   prompt: 'Initial letter sounds — s, a, t, p, i, n'                           },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'English',   prompt: 'Punctuation — capital letters, full stops and question marks'        },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'English',   prompt: 'Persuasive writing — should school uniform be compulsory?'           },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'English',   prompt: 'Figurative language — metaphor, simile and personification'          },
     { yearGroup: 'P3 (Key Stage 1)',       subject: 'English',   prompt: 'Adjectives and descriptive writing — describing a character'         },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'English',   prompt: 'Newspaper report writing — structure, headlines and quotes'          },
+    // Science
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Science',   prompt: 'Food chains — producers, consumers and predators'                    },
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'Science',   prompt: 'Parts of a plant and what plants need to grow'                       },
+    { yearGroup: 'P2 (Foundation Stage)', subject: 'Science',   prompt: 'Animals and their young — matching babies to their parents'          },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Science',   prompt: 'The Solar System — planets, the Moon and space exploration'          },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Science',   prompt: 'Electricity — circuits, conductors and insulators'                   },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'Science',   prompt: 'States of matter — solids, liquids and gases'                       },
+    // History
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'History',   prompt: 'The Vikings — who were they and why did they come to Ireland?'       },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'History',   prompt: 'Life in Victorian times — school, work and home for children'        },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'History',   prompt: 'World War Two — the Blitz, evacuation and life on the Home Front'    },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'History',   prompt: 'The Titanic — its voyage, sinking and legacy'                       },
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'History',   prompt: 'Our Local Area — how our town or village has changed over time'      },
+    // Geography
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Geography', prompt: 'Rivers of Northern Ireland — the water cycle and river features'     },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'Geography', prompt: 'Climate change — causes, effects and what we can do in NI'           },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Geography', prompt: 'Rainforests — layers, wildlife and deforestation'                    },
+    { yearGroup: 'P4 (Key Stage 1)',       subject: 'Geography', prompt: 'Our Local Area — maps, landmarks and compass directions'             },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Geography', prompt: 'Space — the Solar System, satellites and space exploration'          },
+    // PSHE
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'PSHE',      prompt: 'Online safety — staying safe and responsible on the internet'        },
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'PSHE',      prompt: 'Feelings and emotions — recognising and managing how we feel'        },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'PSHE',      prompt: 'Healthy lifestyle — diet, exercise and sleep for growing bodies'     },
+    { yearGroup: 'P7 (Key Stage 2)',       subject: 'PSHE',      prompt: 'Relationships — friendship, respect and resolving conflict'          },
+    // Art
+    { yearGroup: 'P3 (Key Stage 1)',       subject: 'Art',       prompt: 'Colour mixing — primary, secondary and complementary colours'        },
+    { yearGroup: 'P5 (Key Stage 2)',       subject: 'Art',       prompt: 'Van Gogh — his life, style and use of colour and texture'            },
+    { yearGroup: 'P6 (Key Stage 2)',       subject: 'Art',       prompt: 'Celtic patterns and knotwork — design and symmetry'                  },
   ];
 
   function surpriseMe() {
@@ -2474,9 +2554,10 @@
       `color:#1f2937;letter-spacing:0.03em">${word}</span></div>`;
   }
 
-  function buildDallePrompt(word, yearGroup) {
+  function buildDallePrompt(word, yearGroup, topic) {
     const yg = (yearGroup || '').toLowerCase();
     const key = word.toLowerCase().trim();
+    const topicCtx = topic ? `, in the context of ${topic}` : '';
 
     // Word-specific overrides for words DALL-E commonly gets wrong
     const overrides = {
@@ -2532,14 +2613,14 @@
     if (overrides[key]) return overrides[key] + suffix;
 
     if (yg.includes('p1') || yg.includes('p2') || yg.includes('foundation'))
-      return `Simple black and white line drawing of a ${word}, child-friendly, clean, worksheet illustration style, no shading` + suffix;
+      return `Simple black and white line drawing of a ${word}${topicCtx}, child-friendly, clean, worksheet illustration style, no shading` + suffix;
     if (yg.includes('p3') || yg.includes('p4') || yg.includes('key stage 1'))
-      return `Simple black and white illustration of ${word}, clean, educational worksheet style, no background` + suffix;
+      return `Simple black and white illustration of ${word}${topicCtx}, clean, educational worksheet style, no background` + suffix;
     if (yg.includes('p5') || yg.includes('p6'))
-      return `Clean black and white educational illustration of ${word}, suitable for primary school worksheet, minimal detail` + suffix;
+      return `Clean black and white educational illustration of ${word}${topicCtx}, suitable for primary school worksheet, minimal detail` + suffix;
     if (yg.includes('p7'))
-      return `Minimal black and white icon of ${word}, clean, professional, suitable for an exam style worksheet` + suffix;
-    return `Simple black and white illustration of ${word}, educational worksheet style, no background` + suffix;
+      return `Minimal black and white icon of ${word}${topicCtx}, clean, professional, suitable for an exam style worksheet` + suffix;
+    return `Simple black and white illustration of ${word}${topicCtx}, educational worksheet style, no background` + suffix;
   }
 
   function wsImgSize(yearGroup) {
@@ -2573,13 +2654,13 @@
   }
 
   // Foundation Stage: inject images into pre-created grid item slots
-  async function injectFSImages(imgWords, yearGroup) {
+  async function injectFSImages(imgWords, yearGroup, topic) {
     await Promise.all(imgWords.map(async (word, i) => {
       const slot = document.getElementById(`fsimg-${i}`);
       if (!slot) return;
       slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
       try {
-        const src = await generateDalleImage(buildDallePrompt(word, yearGroup));
+        const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
         slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}">`;
         const parent = slot.closest('.ws-fs-grid-item');
         if (parent) parent.classList.add('has-img');
@@ -2591,7 +2672,7 @@
   }
 
   // KS1/KS2/P7: inject an illustration row into the top of #output
-  async function injectWSImages(imgWords, yearGroup) {
+  async function injectWSImages(imgWords, yearGroup, topic) {
     const outputEl = document.getElementById('output');
     if (!outputEl) return;
 
@@ -2620,7 +2701,7 @@
       const slot = document.getElementById(`wsimg-${i}`);
       if (!slot) return;
       try {
-        const src = await generateDalleImage(buildDallePrompt(word, yearGroup));
+        const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
         slot.innerHTML = `<img src="${src}" class="ws-img ws-img-${sizeClass}" alt="${word}">`;
       } catch (e) {
         console.warn(`WS image failed for "${word}":`, e);
@@ -2633,7 +2714,7 @@
   // Generate all images sequentially before rendering — never skips a word.
   // TEXT_VISUAL_WORDS skip DALL-E and get an HTML visual directly.
   // Any failure immediately falls back to phonics emoji — never leaves a box empty.
-  async function generateAllImagesMap(imgWords, yearGroup) {
+  async function generateAllImagesMap(imgWords, yearGroup, topic) {
     console.log(`[images] generating ${imgWords.length} word(s): [${imgWords.join(', ')}]`);
 
     const map = {};
@@ -2645,7 +2726,7 @@
         continue;
       }
       try {
-        map[word] = await generateDalleImage(buildDallePrompt(word, yearGroup));
+        map[word] = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
         console.log(`  "${word}" → DALL-E success`);
       } catch (e) {
         console.warn(`  "${word}" → DALL-E failed (${e.message || e}) — emoji fallback`);
@@ -2961,10 +3042,22 @@
     html = html.replace(/\[COLS:2\]/g, '<div class="ws-cols2">');
     html = html.replace(/\[\/COLS\]/g, '</div>');
 
+    // ── Lesson plan section rendering ─────────────────────────────
+    const isLessonPlan = /\*\*(?:Starter Activity|Main Activity|Learning Objective|Plenary|Differentiation)/.test(html);
+    if (isLessonPlan) {
+      // Bold label: value on same line → field row
+      html = html.replace(/^\*\*([^*\n]+?)\*\*:\s+(.+)$/gm,
+        '<div class="lp-field"><div class="lp-label">$1</div><div class="lp-value">$2</div></div>');
+      // Standalone bold heading → section head
+      html = html.replace(/^\*\*([^*\n]+)\*\*\s*$/gm, '<div class="lp-section-head">$1</div>');
+    }
+
     // ── Section bars → subtle dividers ───────────────────────────
     html = html.replace(/^## 🟢 (.+)$/gm, '<div class="ws-section-divider"><span class="ws-section-divider-inner">$1</span></div>');
     html = html.replace(/^## 🟡 (.+)$/gm, '<div class="ws-section-divider"><span class="ws-section-divider-inner">$1</span></div>');
     html = html.replace(/^## 🔴 (.+)$/gm, '<div class="ws-section-divider"><span class="ws-section-divider-inner">$1</span></div>');
+    // Strip corporate "Section A / Part B" headings → thin divider
+    html = html.replace(/^## (?:Section|Part) [A-Z]\b.*$/gm, '<hr class="ws-section-sep">');
 
     // ── Headings ─────────────────────────────────────────────────
     html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
@@ -3418,17 +3511,22 @@ Reference Thinking Skills and Personal Capabilities where relevant. Keep languag
         outputEl.classList.add('ws-fs');
         document.getElementById('worksheet-paper').classList.add('ws-fs');
       }
+      if (currentStyle === 'lesson plan') {
+        outputEl.classList.add('ws-lesson-plan');
+        document.getElementById('worksheet-paper').classList.add('ws-lesson-plan');
+      }
       // DALL-E image generation — for FS: always pre-generate (or emoji-fallback)
       // then re-render so every box has content; for non-FS: inject illustration row
       const wsImgWordsMatch = fullText.match(/\[(?:WS|FS)_IMGWORDS:([^\]]+)\]/);
       if (wsImgWordsMatch) {
         const wsImgWords = wsImgWordsMatch[1].split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
+        const imgTopic = [subject, prompt].filter(Boolean).join(' ');
         if (wsImgWords.length) {
           if (isFS) {
-            const imageMap = await generateAllImagesMap(wsImgWords, yearGroup);
+            const imageMap = await generateAllImagesMap(wsImgWords, yearGroup, imgTopic);
             outputEl.innerHTML = markdownToHtml(fullText, imageMap);
           } else {
-            injectWSImages(wsImgWords, yearGroup);
+            injectWSImages(wsImgWords, yearGroup, imgTopic);
           }
         }
       }
