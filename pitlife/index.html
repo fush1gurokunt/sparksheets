@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PitLife — F1 Career Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #050508;
+  --bg2:      #0d0d14;
+  --bg3:      #15151e;
+  --border:   #26263a;
+  --red:      #e8000a;
+  --red-dark: #b50008;
+  --gold:     #f5a623;
+  --green:    #22c55e;
+  --text:     #f0f0f5;
+  --dim:      #7878a0;
+  --head:     'Barlow Condensed', sans-serif;
+  --body:     'Barlow', sans-serif;
+  --r:        10px;
+  --rs:       6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Barlow',sans-serif;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* ─── SCREENS ─── */
+.screen{width:100%;max-width:480px}
+.screen.hidden{display:none!important}
+
+/* ─── START ─── */
+#screen-start{
+  padding:40px 16px 60px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+}
+.logo-icon{font-size:52px;text-align:center;line-height:1}
+.logo-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:52px;font-weight:900;
+  letter-spacing:3px;color:var(--red);
+  text-transform:uppercase;text-align:center;
+}
+.logo-sub{
+  color:var(--dim);font-size:13px;
+  letter-spacing:2px;text-transform:uppercase;
+  text-align:center;margin-top:2px;
+}
+.form{width:100%;display:flex;flex-direction:column;gap:18px}
+.flabel{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;
+  letter-spacing:2px;color:var(--dim);
+  text-transform:uppercase;margin-bottom:7px;display:block;
+}
+.finput{
+  width:100%;background:var(--bg3);
+  border:1.5px solid var(--border);border-radius:var(--rs);
+  color:var(--text);font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:700;
+  padding:12px 14px;outline:none;
+  transition:border-color .15s;
+}
+.finput:focus{border-color:var(--red)}
+.nat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.nat-btn{
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:var(--rs);cursor:pointer;
+  font-size:20px;padding:7px 2px;
+  text-align:center;transition:border-color .15s,background .15s;
+  position:relative;
+}
+.nat-btn:hover{border-color:#555}
+.nat-btn.sel{border-color:var(--red);background:rgba(232,0,10,.12)}
+.nat-tip{
+  display:none;position:absolute;
+  bottom:calc(100% + 4px);left:50%;
+  transform:translateX(-50%);
+  background:#222;color:#fff;
+  font-size:10px;padding:2px 7px;
+  border-radius:4px;white-space:nowrap;
+  pointer-events:none;z-index:10;
+  font-family:'Barlow',sans-serif;
+}
+.nat-btn:hover .nat-tip{display:block}
+.btn-primary{
+  background:var(--red);border:none;border-radius:var(--rs);
+  color:#fff;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:19px;font-weight:700;
+  letter-spacing:1.5px;padding:14px;
+  text-transform:uppercase;width:100%;
+  transition:background .15s,transform .1s;
+}
+.btn-primary:hover:not(:disabled){background:var(--red-dark)}
+.btn-primary:active:not(:disabled){transform:scale(.98)}
+.btn-primary:disabled{background:#1c1c28;color:#444;cursor:not-allowed}
+
+/* ─── GAME SCREEN ─── */
+#screen-game{display:flex;flex-direction:column;align-items:center}
+#game-header{
+  position:sticky;top:0;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  padding:10px 16px;z-index:100;
+  width:100%;max-width:480px;
+}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.hdr-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:21px;font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.hdr-team{font-size:12px;color:var(--dim);margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.hdr-age{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--dim)}
+.stage-pill{
+  background:var(--red);border-radius:20px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  padding:3px 10px;text-transform:uppercase;white-space:nowrap;
+}
+.wrap{width:100%;max-width:480px;padding:0 16px 110px}
+.section-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;
+  letter-spacing:2.5px;color:var(--dim);
+  text-transform:uppercase;margin:20px 0 10px;
+}
+
+/* ─── STATS ─── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat-bar{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--rs);padding:8px 10px;
+}
+.stat-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.stat-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:1px;color:var(--dim);text-transform:uppercase;
+}
+.stat-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:700;
+}
+.stat-track{background:var(--bg);border-radius:3px;height:4px;overflow:hidden}
+.stat-fill{background:var(--red);border-radius:3px;height:100%;transition:width .4s ease}
+.stat-fill.hi{background:var(--green)}
+.stat-fill.md{background:var(--gold)}
+.earn-row{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);
+  padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:7px;
+}
+.earn-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;
+  letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;
+}
+.earn-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:21px;font-weight:700;color:var(--gold);
+}
+.career-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:7px}
+.cs{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--rs);padding:8px 4px;text-align:center;
+}
+.cs-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;
+}
+.cs-lbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* ─── EVENT CARDS ─── */
+.events-list{display:flex;flex-direction:column;gap:10px}
+.ev-card{
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:var(--r);overflow:hidden;transition:opacity .3s;
+}
+.ev-card.resolved{opacity:.4;pointer-events:none}
+.ev-head{display:flex;align-items:flex-start;gap:10px;padding:12px 14px 6px}
+.ev-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.ev-cat{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;
+  letter-spacing:1.5px;color:var(--red);text-transform:uppercase;
+}
+.ev-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:700;line-height:1.2;margin-top:1px;
+}
+.ev-desc{font-size:13px;color:var(--dim);line-height:1.5;padding:0 14px 10px}
+.ev-choices{display:flex;flex-direction:column;gap:6px;padding:0 10px 10px}
+.choice-btn{
+  background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:var(--rs);color:var(--text);
+  cursor:pointer;font-family:'Barlow',sans-serif;
+  font-size:13px;padding:8px 10px;
+  text-align:left;width:100%;
+  transition:border-color .15s,background .15s;
+}
+.choice-btn:hover{border-color:var(--red);background:rgba(232,0,10,.08)}
+.fx{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.fx-tag{
+  border-radius:4px;font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.5px;padding:1px 5px;
+}
+.fx-tag.pos{background:rgba(34,197,94,.15);color:var(--green)}
+.fx-tag.neg{background:rgba(232,0,10,.15);color:#ff6060}
+.fx-tag.neu{background:rgba(255,255,255,.08);color:var(--dim)}
+
+/* ─── SEASON LOG ─── */
+.log-list{display:flex;flex-direction:column;gap:6px}
+.log-entry{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--rs);padding:9px 12px;
+}
+.log-h{display:flex;justify-content:space-between;align-items:center}
+.log-stage{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;color:var(--red);
+}
+.log-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
+.log-pos.gold{color:var(--gold)}
+.log-pos.silver{color:#b0b0c0}
+.log-detail{font-size:12px;color:var(--dim);margin-top:2px}
+
+/* ─── BOTTOM BAR ─── */
+#bottom-bar{
+  position:fixed;bottom:0;left:50%;
+  transform:translateX(-50%);
+  width:100%;max-width:480px;
+  background:linear-gradient(to top,var(--bg) 75%,transparent);
+  padding:16px 16px 22px;z-index:99;
+}
+#race-btn{
+  background:var(--red);border:none;border-radius:var(--rs);
+  color:#fff;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:21px;font-weight:700;letter-spacing:2px;
+  padding:15px;text-transform:uppercase;width:100%;
+  transition:background .15s,transform .1s;
+}
+#race-btn:hover:not(:disabled){background:var(--red-dark)}
+#race-btn:active:not(:disabled){transform:scale(.98)}
+#race-btn:disabled{background:#14141e;color:#3a3a50;cursor:not-allowed}
+#race-btn .sub{display:block;font-size:11px;font-weight:400;letter-spacing:1px;opacity:.65;margin-top:2px}
+
+/* ─── RESULTS OVERLAY ─── */
+#results-overlay{
+  position:fixed;inset:0;
+  background:rgba(5,5,8,.88);
+  backdrop-filter:blur(4px);
+  z-index:200;display:flex;
+  flex-direction:column;align-items:center;
+  justify-content:flex-end;padding:16px;
+}
+#results-overlay.hidden{display:none!important}
+.res-card{
+  background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:var(--r);width:100%;max-width:448px;
+  padding:20px;
+  animation:slideUp .35s cubic-bezier(.34,1.56,.64,1);
+  max-height:88vh;overflow-y:auto;
+}
+@keyframes slideUp{
+  from{transform:translateY(100%);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+.res-season{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  color:var(--red);text-transform:uppercase;margin-bottom:4px;
+}
+.res-pos{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:72px;font-weight:900;line-height:1;
+}
+.res-pos.gold{color:var(--gold)}
+.res-pos.silver{color:#b0b0c0}
+.res-sublabel{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;color:var(--dim);margin-bottom:14px;
+}
+.res-headline{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:700;line-height:1.3;
+  border-left:3px solid var(--red);padding-left:10px;margin-bottom:14px;
+}
+.deltas-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.delta{
+  background:var(--bg3);border-radius:var(--rs);
+  padding:6px 10px;display:flex;justify-content:space-between;align-items:center;
+}
+.delta-n{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+.delta-v{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
+.delta-v.pos{color:var(--green)}
+.delta-v.neg{color:#ff6060}
+.delta-v.neu{color:var(--dim)}
+.earn-banner{
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);
+  border-radius:var(--rs);padding:9px 13px;
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;
+}
+.earn-b-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.earn-b-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--gold)}
+.champ-banner{
+  background:linear-gradient(135deg,rgba(245,166,35,.18),rgba(232,0,10,.15));
+  border:1.5px solid var(--gold);border-radius:var(--rs);
+  padding:12px 14px;text-align:center;margin-bottom:14px;
+}
+.champ-banner .trophy{font-size:30px}
+.champ-banner h3{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;color:var(--gold);
+  text-transform:uppercase;letter-spacing:1px;
+}
+.move-banner{
+  border-radius:var(--rs);padding:9px 13px;
+  text-align:center;margin-bottom:14px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+}
+.move-banner.up{background:rgba(34,197,94,.1);border:1.5px solid var(--green);color:var(--green)}
+.move-banner.down{background:rgba(232,0,10,.1);border:1.5px solid var(--red);color:#ff6060}
+.standings{width:100%;border-collapse:collapse;margin-bottom:14px}
+.standings th{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  font-weight:700;letter-spacing:1.5px;color:var(--dim);
+  text-transform:uppercase;text-align:left;
+  padding:4px 8px;border-bottom:1px solid var(--border);
+}
+.standings td{
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;
+  padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.standings tr.me td{color:var(--red);font-weight:700}
+.standings td.pts{text-align:right;font-weight:700}
+.btn-continue{
+  background:var(--red);border:none;border-radius:var(--rs);
+  color:#fff;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:700;letter-spacing:1.5px;
+  padding:13px;text-transform:uppercase;width:100%;
+  transition:background .15s;margin-top:4px;
+}
+.btn-continue:hover{background:var(--red-dark)}
+
+/* ─── GAME OVER ─── */
+#screen-gameover{
+  width:100%;max-width:480px;
+  padding:40px 16px 60px;
+  display:none;flex-direction:column;align-items:center;gap:18px;
+}
+.go-title{text-align:center}
+.go-title h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:42px;font-weight:900;color:var(--red);
+  text-transform:uppercase;letter-spacing:2px;
+}
+.go-title p{font-size:13px;color:var(--dim);margin-top:4px}
+.rating-box{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;width:100%;text-align:center;
+}
+.rating-box .grade{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:52px;font-weight:900;color:var(--gold);
+}
+.rating-box .grade-lbl{font-size:13px;color:var(--dim);margin-top:2px}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.sum-stat{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--rs);padding:14px 10px;text-align:center;
+}
+.sum-v{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900}
+.sum-v.gold{color:var(--gold)}
+.sum-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+
+/* ─── MISC ─── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#2a2a40;border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- ═══════ START SCREEN ═══════ -->
+<div id="screen-start" class="screen">
+  <div class="logo-icon">🏎</div>
+  <div class="logo-title">PitLife</div>
+  <div class="logo-sub">F1 Career Simulator</div>
+
+  <div class="form">
+    <div>
+      <label class="flabel">Driver Name</label>
+      <input class="finput" id="driver-name" type="text" placeholder="Your name" maxlength="24" autocomplete="off">
+    </div>
+    <div>
+      <label class="flabel">Nationality</label>
+      <div class="nat-grid" id="nat-grid"></div>
+    </div>
+    <button class="btn-primary" id="start-btn" onclick="onStart()" disabled>Start Career</button>
+  </div>
+</div>
+
+<!-- ═══════ GAME SCREEN ═══════ -->
+<div id="screen-game" class="screen hidden">
+  <div id="game-header"></div>
+  <div class="wrap">
+    <div id="stats-sec"></div>
+    <div id="events-sec"></div>
+    <div id="log-sec"></div>
+  </div>
+  <div id="bottom-bar">
+    <button id="race-btn" onclick="raceTheSeason()" disabled>
+      Race the Season
+      <span class="sub" id="race-sub">Resolve all events first</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════ RESULTS OVERLAY ═══════ -->
+<div id="results-overlay" class="hidden">
+  <div id="res-card" class="res-card"></div>
+</div>
+
+<!-- ═══════ GAME OVER SCREEN ═══════ -->
+<div id="screen-gameover"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+
+const NATS = [
+  {f:'🇬🇧',n:'British'},{f:'🇩🇪',n:'German'},{f:'🇫🇷',n:'French'},
+  {f:'🇮🇹',n:'Italian'},{f:'🇪🇸',n:'Spanish'},{f:'🇳🇱',n:'Dutch'},
+  {f:'🇲🇨',n:'Monégasque'},{f:'🇫🇮',n:'Finnish'},{f:'🇦🇺',n:'Australian'},
+  {f:'🇧🇷',n:'Brazilian'},{f:'🇲🇽',n:'Mexican'},{f:'🇨🇦',n:'Canadian'},
+  {f:'🇺🇸',n:'American'},{f:'🇯🇵',n:'Japanese'},{f:'🇦🇹',n:'Austrian'},
+  {f:'🇧🇪',n:'Belgian'},{f:'🇦🇷',n:'Argentine'},{f:'🇿🇦',n:'South African'},
+  {f:'🇩🇰',n:'Danish'},{f:'🇸🇪',n:'Swedish'},{f:'🇳🇿',n:'New Zealander'},
+  {f:'🇨🇴',n:'Colombian'},{f:'🇹🇭',n:'Thai'},{f:'🇮🇳',n:'Indian'}
+];
+
+const NICKNAMES = [
+  'The Iceman','Rookie Sensation','The Comeback Kid','Lightning',
+  'The Professor','Hammer Time','El Maestro','The Viking',
+  'The Bullet','Speed Demon','The Surgeon','Turbo',
+  'The Prodigy','Iron Man','The Ghost','Superstar',
+  'The Executioner','Mad Max','The Wall','Pinball Wizard'
+];
+
+const STAGES = [
+  {id:'karting', label:'Karting',   cars:10, rounds:8,  earnings:8000,   promoteTop:3},
+  {id:'f4',      label:'Formula 4', cars:10, rounds:8,  earnings:25000,  promoteTop:3},
+  {id:'f3',      label:'Formula 3', cars:10, rounds:10, earnings:80000,  promoteTop:3},
+  {id:'f2',      label:'Formula 2', cars:10, rounds:12, earnings:250000, promoteTop:3},
+  {id:'f1',      label:'Formula 1', cars:20, rounds:24, earnings:null,   promoteTop:null}
+];
+
+const F1_TEAMS = [
+  {name:'Silver Arrow',     tier:1, pay:28000000},
+  {name:'Scuderia Rossa',   tier:1, pay:24000000},
+  {name:'Papaya Racing',    tier:1, pay:21000000},
+  {name:'Azure Racing',     tier:2, pay:9000000},
+  {name:'Hawthorn F1',      tier:2, pay:7500000},
+  {name:'Britannia Racing', tier:2, pay:6000000},
+  {name:'Orion Motorsport', tier:2, pay:4500000},
+  {name:'Torino Motorsport',tier:3, pay:3000000},
+  {name:'Steppe Racing',    tier:3, pay:2500000},
+  {name:'Veloce F1',        tier:3, pay:2000000}
+];
+
+const FEEDER_AI = ['Kowalski','Mercer','Fontaine','De Silva','Okafor',
+  'Lindqvist','Thierfelder','Navarro','Nakamura','Bright','Volkov','Ferrara'];
+
+const F1_AI = ['Hamilton Jr','Schumacher III','Alonso II','Verstappen II',
+  'Leclerc II','Russell III','Norris II','Sainz Jr','Piastri II','Perez III',
+  'Hulkenberg II','Bottas Jr','Ocon II','Albon Jr','Zhou II',
+  'Ricciardo III','Tsunoda Jr','Stroll Jr','Magnussen Jr','Sargeant II'];
+
+const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
+
+// ── EVENTS ──────────────────────────────────────
+const EVENTS = [
+  // TRAINING
+  {id:'e01',cat:'Training',icon:'💪',title:'Winter Workout Regime',
+   desc:'Your trainer designed an intense pre-season programme. Do you go all-in?',
+   choices:[
+    {text:'Push to the absolute limit', fx:{Pace:+5,Fitness:-5,Morale:-2}},
+    {text:'Balanced approach',          fx:{Pace:+2,Consistency:+2,Fitness:+3}},
+    {text:'Prioritise rest',            fx:{Fitness:+7,Morale:+4,Pace:-2}}
+  ]},
+  {id:'e02',cat:'Training',icon:'🕹️',title:'Simulator Marathon',
+   desc:'The team wants 40 hours in the sim this week. Your back is already aching.',
+   choices:[
+    {text:'Full 40 hours — no excuses', fx:{Pace:+5,Consistency:+4,Fitness:-5,Morale:-4}},
+    {text:'Do 20 hours, save energy',   fx:{Pace:+2,Consistency:+2}},
+    {text:'Skip it — trust instinct',   fx:{Morale:+5,Pace:-3}}
+  ]},
+  {id:'e03',cat:'Training',icon:'🏔️',title:'Altitude Training Camp',
+   desc:'An invite to train with a cycling team in the Alps. Brutal but legendary.',
+   choices:[
+    {text:'Full three-week programme',  fx:{Fitness:+9,Racecraft:+2,Morale:-5}},
+    {text:'One week only',              fx:{Fitness:+4,Morale:-1}},
+    {text:'Decline — stay home',        fx:{Morale:+3}}
+  ]},
+  {id:'e04',cat:'Training',icon:'🥗',title:'Nutritionist\'s New Plan',
+   desc:'Your nutritionist wants to cut 2 kg before the season. You love your pizza.',
+   choices:[
+    {text:'Commit fully to the diet',   fx:{Fitness:+5,Morale:-3}},
+    {text:'Try to compromise',          fx:{Fitness:+2,Morale:+1}},
+    {text:'Ignore it',                  fx:{Morale:+4,Fitness:-2}}
+  ]},
+  // MEDIA
+  {id:'e05',cat:'Media',icon:'🎙️',title:'Awkward Press Conference',
+   desc:'A journalist asks if your car is genuinely worse than the rivals. Cameras are rolling.',
+   choices:[
+    {text:'"We\'re developing fast — watch this space"', fx:{Reputation:+4}},
+    {text:'"Yes, but we\'ll fix it"',                    fx:{Reputation:-2,Morale:+4}},
+    {text:'No comment',                                   fx:{Reputation:-5}}
+  ]},
+  {id:'e06',cat:'Media',icon:'🎬',title:'Netflix Doc Offer',
+   desc:'A streaming giant wants to film your season for a global series.',
+   choices:[
+    {text:'Accept — massive exposure', fx:{Reputation:+8,Morale:+3,Fitness:-2}, money:50000},
+    {text:'Partial access only',       fx:{Reputation:+4}, money:20000},
+    {text:'Decline — too intrusive',   fx:{Reputation:-1,Morale:+3}}
+  ]},
+  {id:'e07',cat:'Media',icon:'📱',title:'Social Media Storm',
+   desc:'A tweet you posted has been taken wildly out of context. It\'s going viral.',
+   choices:[
+    {text:'Apologise publicly',        fx:{Reputation:+3,Morale:-6}},
+    {text:'Defend your position',      fx:{Reputation:-5,Morale:+3}},
+    {text:'Delete and say nothing',    fx:{Reputation:-3,Morale:-2}}
+  ]},
+  {id:'e08',cat:'Media',icon:'📺',title:'Heated TV Interview',
+   desc:'You let slip live on air that you\'re frustrated with the car setup.',
+   choices:[
+    {text:'Walk it back in follow-up', fx:{Reputation:+2,Morale:-3}},
+    {text:'Double down — it\'s true',  fx:{Reputation:-6,Morale:+5}},
+    {text:'Blame the journalist',      fx:{Reputation:-5,Morale:+2}}
+  ]},
+  // CONTRACT
+  {id:'e09',cat:'Contract',icon:'📋',title:'Contract Extension Offer',
+   desc:'Your team puts a new deal on the table. The money\'s decent but not amazing.',
+   choices:[
+    {text:'Sign immediately — security first', fx:{Reputation:+3,Morale:+4}, contractLocked:true},
+    {text:'Negotiate for better terms',        fx:{Reputation:+1,Morale:+2}, negotiate:true},
+    {text:'Decline — test the market',         fx:{Reputation:-3,Morale:-2}, freeAgent:true}
+  ]},
+  {id:'e10',cat:'Contract',icon:'🔀',title:'Rival Team Approaches You',
+   desc:'A faster team\'s agent calls yours. Your current principal finds out.',
+   choices:[
+    {text:'Explore it openly',      fx:{Reputation:-3,Morale:+5}, freeAgent:true},
+    {text:'Stay loyal',             fx:{Reputation:+6,Morale:-2}},
+    {text:'Take a secret meeting',  fx:{Reputation:-7,Morale:+3}, freeAgent:true}
+  ]},
+  // INCIDENTS
+  {id:'e11',cat:'Incident',icon:'💥',title:'Turn One Collision',
+   desc:'A rival takes you out at the first corner. The press want someone to blame.',
+   choices:[
+    {text:'Accept partial blame gracefully', fx:{Reputation:+4,Morale:-4}},
+    {text:'Publicly blame the other driver', fx:{Reputation:-6,Morale:+5}},
+    {text:'"It was just a racing incident"', fx:{Reputation:+1,Morale:+1}}
+  ]},
+  {id:'e12',cat:'Incident',icon:'🔧',title:'DNF While Leading',
+   desc:'You were cruising to a certain win when the engine failed. Pure heartbreak.',
+   choices:[
+    {text:'Channel it into training',  fx:{Racecraft:+4,Morale:-2,Fitness:+2}},
+    {text:'Vent publicly',             fx:{Reputation:-4,Morale:+3}},
+    {text:'Move on without comment',   fx:{Morale:-6,Consistency:+3}}
+  ]},
+  {id:'e13',cat:'Incident',icon:'🏳️',title:'Controversial Penalty',
+   desc:'The stewards hand you a 5-place grid penalty. Half the paddock thinks it\'s harsh.',
+   choices:[
+    {text:'Accept and focus',                fx:{Consistency:+3,Morale:-3}},
+    {text:'Challenge it publicly',           fx:{Reputation:-4,Morale:+5}},
+    {text:'Let your manager handle it',      fx:{Reputation:+1,Morale:-1}}
+  ]},
+  {id:'e14',cat:'Incident',icon:'😤',title:'Paddock Bust-Up',
+   desc:'You\'ve clashed with your race engineer over strategy. It got heated.',
+   choices:[
+    {text:'Apologise and reset',         fx:{Reputation:+3,Morale:-3}},
+    {text:'Stand your ground',           fx:{Racecraft:+2,Morale:+2,Reputation:-5}},
+    {text:'Request a new engineer',      fx:{Reputation:-3,Consistency:-2,Morale:+5}}
+  ]},
+  // PERSONAL
+  {id:'e15',cat:'Personal',icon:'💰',title:'Energy Drink Deal',
+   desc:'MegaBoost Energy want you as their global brand ambassador.',
+   choices:[
+    {text:'Accept the deal',            fx:{Reputation:+5,Morale:+3}, money:200000},
+    {text:'Counter-negotiate',          fx:{Reputation:+3,Morale:+2}, money:120000},
+    {text:'Decline — not your image',   fx:{Morale:+3}}
+  ]},
+  {id:'e16',cat:'Personal',icon:'👨‍👩‍👧',title:'Family Asking for Time',
+   desc:'Your family haven\'t seen you in months. They\'re asking for a real break.',
+   choices:[
+    {text:'Take a full week off',               fx:{Morale:+9,Fitness:+3,Pace:-2}},
+    {text:'Promise a holiday after the season', fx:{Morale:+3}},
+    {text:'Keep pushing',                        fx:{Morale:-6,Fitness:+2}}
+  ]},
+  {id:'e17',cat:'Personal',icon:'🤕',title:'Training Injury',
+   desc:'You\'ve tweaked your wrist in the gym. Nothing broken, but it\'s sore.',
+   choices:[
+    {text:'Rest for a week',           fx:{Fitness:+4,Pace:-2,Consistency:-2}},
+    {text:'Push through the pain',     fx:{Fitness:-7,Pace:+2}},
+    {text:'Physiotherapy programme',   fx:{Fitness:+2,Morale:-2}}
+  ]},
+  {id:'e18',cat:'Personal',icon:'🌱',title:'Charity Partnership',
+   desc:'A children\'s karting charity wants you as their patron.',
+   choices:[
+    {text:'Accept — great cause',       fx:{Reputation:+7,Morale:+5}},
+    {text:'Donate privately',           fx:{Morale:+4}},
+    {text:'No time right now',          fx:{Reputation:-2}}
+  ]},
+  // TEAM ORDERS
+  {id:'e19',cat:'Team Orders',icon:'📻',title:'"Hold Position"',
+   desc:'You\'re clearly faster than your teammate, but the pit wall says "hold". Thousands are watching.',
+   choices:[
+    {text:'Obey the order',                      fx:{Reputation:+5,Morale:-10}},
+    {text:'Ignore it and attack',                fx:{Reputation:-8,Morale:+8,Racecraft:+3}},
+    {text:'Slow slightly but don\'t yield',      fx:{Reputation:-3,Morale:-4}}
+  ]},
+  {id:'e20',cat:'Team Orders',icon:'🔄',title:'Give Up Your Points',
+   desc:'The team asks you to slow at the finish and gift your championship-chasing teammate a place.',
+   choices:[
+    {text:'Do it — team first',         fx:{Reputation:+7,Morale:-12}},
+    {text:'Refuse outright',            fx:{Reputation:-10,Morale:+7}},
+    {text:'Slow but protect your place',fx:{Reputation:-3,Morale:-5}}
+  ]},
+  {id:'e21',cat:'Team Orders',icon:'🔩',title:'Engineer\'s Risky Setup',
+   desc:'Your engineer wants a radical qualifying setup. Genius or disaster — no middle ground.',
+   choices:[
+    {text:'Trust the engineer',          fx:{Consistency:+4,Pace:+3,Morale:+3}},
+    {text:'Go conservative',             fx:{Consistency:+2,Pace:-1}},
+    {text:'Override with your instinct', fx:{Pace:+6,Consistency:-5,Reputation:-2}}
+  ]}
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+
+let S = null;
+let selectedNat = null;
+
+function defaultState() {
+  return {
+    name:'', nat:'', natFlag:'', age:16, nickname:'', seasonNum:1,
+    stageIdx:0, f1TeamIdx:null, seasonsInF1:0,
+    Pace:42, Racecraft:40, Consistency:40, Fitness:42, Reputation:30, Morale:62,
+    earnings:0, championships:0, podiums:0, wins:0,
+    events:[], resolved:[], log:[],
+    lastResult:null, gameOver:false,
+    firedCount:0, contractLocked:false, freeAgent:false, consecutiveBadF1:0
+  };
+}
+
+function save() {
+  try { localStorage.setItem('pitlife_v3', JSON.stringify(S)); } catch(e){}
+}
+function load() {
+  try {
+    const d = localStorage.getItem('pitlife_v3');
+    if (d) { S = JSON.parse(d); return true; }
+  } catch(e){}
+  return false;
+}
+function clearSave() { localStorage.removeItem('pitlife_v3'); }
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+
+function rnd(lo, hi) { return Math.floor(Math.random() * (hi - lo + 1)) + lo; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtMoney(n) {
+  if (n >= 1000000) return '£' + (n/1000000).toFixed(1) + 'm';
+  if (n >= 1000)    return '£' + Math.round(n/1000) + 'k';
+  return '£' + n;
+}
+function ordSuffix(n) {
+  if (n===1) return 'st'; if (n===2) return 'nd'; if (n===3) return 'rd'; return 'th';
+}
+function posClass(p) { return p===1?'gold':p<=3?'silver':''; }
+function stage() { return STAGES[S.stageIdx]; }
+function f1team() { return S.f1TeamIdx !== null ? F1_TEAMS[S.f1TeamIdx] : null; }
+
+function ptsFor(pos) {
+  return pos <= PTS_TABLE.length ? PTS_TABLE[pos-1] : 0;
+}
+
+// Weighted race position (1-based)
+function simRace(totalCars) {
+  let score = (S.Pace*0.35 + S.Racecraft*0.30 + S.Consistency*0.25 + S.Fitness*0.10) / 100;
+  score += (S.Morale - 50) / 500;
+  if (S.stageIdx === 4) {
+    const t = f1team();
+    if (t) score += t.tier===1 ? 0.28 : t.tier===2 ? 0.14 : 0;
+  } else {
+    score += S.Reputation / 600;
+  }
+  score += (Math.random()*0.20 - 0.04);
+  score = clamp(score, 0, 1);
+  return clamp(Math.round((1-score)*(totalCars-1))+1, 1, totalCars);
+}
+
+function buildStandings(aiNames, totalCars, rounds, playerPts) {
+  const rivals = aiNames.slice(0, totalCars-1).map(name => {
+    const skill = rnd(32,88)/100;
+    let pts = 0;
+    for (let r=0; r<rounds; r++) {
+      const sc = clamp(skill + (Math.random()*0.20-0.04), 0, 1);
+      pts += ptsFor(clamp(Math.round((1-sc)*(totalCars-1))+1, 1, totalCars));
+    }
+    return {name, pts};
+  });
+  rivals.push({name:S.name, pts:playerPts, me:true});
+  rivals.sort((a,b)=>b.pts-a.pts);
+  return rivals;
+}
+
+// ══════════════════════════════════════════════
+// START SCREEN
+// ══════════════════════════════════════════════
+
+function buildNatGrid() {
+  document.getElementById('nat-grid').innerHTML = NATS.map((n,i)=>
+    `<button class="nat-btn" onclick="pickNat(${i})" title="${n.n}">
+      ${n.f}<span class="nat-tip">${n.n}</span>
+    </button>`
+  ).join('');
+}
+
+function pickNat(i) {
+  selectedNat = i;
+  document.querySelectorAll('.nat-btn').forEach((b,j)=>b.classList.toggle('sel',j===i));
+  checkReady();
+}
+
+function checkReady() {
+  const name = document.getElementById('driver-name')?.value?.trim();
+  document.getElementById('start-btn').disabled = !name || selectedNat===null;
+}
+
+function onStart() {
+  const name = document.getElementById('driver-name').value.trim();
+  if (!name || selectedNat===null) return;
+  S = defaultState();
+  S.name = name;
+  S.natFlag = NATS[selectedNat].f;
+  S.nat = NATS[selectedNat].n;
+  S.nickname = NICKNAMES[rnd(0,NICKNAMES.length-1)];
+  genEvents();
+  save();
+  showScreen('game');
+  renderAll();
+}
+
+// ══════════════════════════════════════════════
+// EVENTS
+// ══════════════════════════════════════════════
+
+function genEvents() {
+  const count = rnd(3,5);
+  const pool = [...EVENTS];
+  const picked = [];
+  for (let i=0; i<count && pool.length; i++) {
+    const j = rnd(0, pool.length-1);
+    picked.push(pool.splice(j,1)[0]);
+  }
+  S.events = picked;
+  S.resolved = [];
+  S.contractLocked = false;
+  S.freeAgent = false;
+}
+
+function resolveEvent(ei, ci) {
+  if (S.resolved.includes(ei)) return;
+  const ev = S.events[ei];
+  const ch = ev.choices[ci];
+  const STATS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
+  for (const k of STATS) {
+    if (k in (ch.fx||{})) S[k] = clamp(S[k] + ch.fx[k], 0, 100);
+  }
+  if (ch.money) S.earnings += ch.money;
+  if (ch.contractLocked) S.contractLocked = true;
+  if (ch.freeAgent) S.freeAgent = true;
+  S.resolved.push(ei);
+  save();
+  renderAll();
+}
+
+// ══════════════════════════════════════════════
+// RACE SIMULATION
+// ══════════════════════════════════════════════
+
+function raceTheSeason() {
+  if (S.resolved.length < S.events.length) return;
+  const st = stage();
+  const positions = [];
+  let playerPts = 0, playerWins = 0, playerPodiums = 0;
+
+  for (let r=0; r<st.rounds; r++) {
+    const p = simRace(st.cars);
+    positions.push(p);
+    playerPts += ptsFor(p);
+    if (p===1) playerWins++;
+    if (p<=3) playerPodiums++;
+  }
+
+  const avgPos = Math.round(positions.reduce((a,b)=>a+b,0)/st.rounds);
+  const aiPool = S.stageIdx===4 ? F1_AI : FEEDER_AI;
+  const standings = buildStandings(aiPool, st.cars, st.rounds, playerPts);
+  const champPos = standings.findIndex(r=>r.me)+1;
+
+  // Earnings
+  let seasonEarn;
+  if (S.stageIdx===4) {
+    const t = f1team();
+    seasonEarn = t ? t.pay : 2000000;
+    seasonEarn += playerWins * Math.round(seasonEarn * 0.03);
+  } else {
+    seasonEarn = st.earnings;
+    if (champPos===1) seasonEarn = Math.round(seasonEarn * 1.3);
+  }
+  S.earnings += seasonEarn;
+  S.wins += playerWins;
+  S.podiums += playerPodiums;
+  if (champPos===1) S.championships++;
+
+  // Stat changes from season performance
+  const deltas = {};
+  function addDelta(k, v) { deltas[k] = (deltas[k]||0) + v; S[k] = clamp(S[k]+v, 0, 100); }
+
+  if (avgPos <= 3) { addDelta('Racecraft',3); }
+  if (avgPos <= Math.ceil(st.cars/2)) {
+    addDelta('Consistency',2); addDelta('Morale',3); addDelta('Reputation',3);
+  } else {
+    addDelta('Morale',-4); addDelta('Reputation',-3);
+  }
+  if (champPos===1) { addDelta('Reputation',8); addDelta('Morale',6); }
+  if (playerWins >= 3) addDelta('Reputation',4);
+  // Small natural pace growth
+  const paceGrow = rnd(0,2);
+  if (paceGrow > 0) addDelta('Pace', paceGrow);
+
+  // Promotion / firing / team movement
+  let promoted = false, fired = false, promotedTo = null, newTeamName = null;
+
+  if (S.stageIdx < 4) {
+    if (champPos <= st.promoteTop) {
+      promoted = true;
+      promotedTo = STAGES[S.stageIdx+1].label;
+    }
+    if (avgPos >= st.cars-1 && S.Reputation < 25) { fired = true; }
+  } else {
+    S.seasonsInF1++;
+    const bad = avgPos > 15 && S.Reputation < 35;
+    const veryBad = S.consecutiveBadF1 >= 1 && avgPos > 14;
+    if (bad || veryBad) {
+      fired = true;
+      S.consecutiveBadF1++;
+    } else {
+      S.consecutiveBadF1 = 0;
+      // Upgrade team if strong result + not locked
+      if (champPos <= 3 && !S.contractLocked) {
+        const t = f1team();
+        if (t && t.tier > 1) {
+          const better = F1_TEAMS.filter(x=>x.tier < t.tier);
+          if (better.length) {
+            const pick = better[rnd(0,better.length-1)];
+            S.f1TeamIdx = F1_TEAMS.indexOf(pick);
+            newTeamName = pick.name;
+            promoted = true;
+            promotedTo = 'Formula 1';
+          }
+        }
+      }
+      // Free agent — find new team
+      if (S.freeAgent) {
+        const tiers = S.Reputation>=70?[1,2]:S.Reputation>=45?[2,3]:[3];
+        const eligible = F1_TEAMS.filter(t=>tiers.includes(t.tier));
+        const pick = eligible[rnd(0,eligible.length-1)];
+        S.f1TeamIdx = F1_TEAMS.indexOf(pick);
+        newTeamName = pick.name;
+      }
+    }
+  }
+
+  const logEntry = {
+    season:S.seasonNum, stage:st.label, avgPos, champPos,
+    wins:playerWins, podiums:playerPodiums, earnings:seasonEarn,
+    champWon:champPos===1, promoted, fired, promotedTo, newTeamName,
+    team: S.stageIdx===4 ? f1team()?.name : null
+  };
+  S.log.unshift(logEntry);
+
+  S.lastResult = {
+    ...logEntry, deltas, standings:standings.slice(0,5), totalCars:st.cars
+  };
+
+  S.age++;
+  S.seasonNum++;
+
+  // Apply promotion/demotion to stage
+  if (promoted && S.stageIdx < 4) {
+    S.stageIdx++;
+    if (S.stageIdx === 4) assignF1Team();
+  } else if (fired) {
+    S.firedCount++;
+    if (S.stageIdx === 4) {
+      if (S.firedCount >= 2) {
+        S.gameOver = true;
+      } else {
+        const back = F1_TEAMS.filter(t=>t.tier===3);
+        S.f1TeamIdx = F1_TEAMS.indexOf(back[rnd(0,back.length-1)]);
+      }
+    } else {
+      if (S.firedCount >= 3) S.gameOver = true;
+    }
+  } else {
+    S.firedCount = 0;
+  }
+
+  if (S.age >= 40) S.gameOver = true;
+  if (!S.gameOver) genEvents();
+
+  save();
+  showResults();
+}
+
+function assignF1Team() {
+  const tier = S.Reputation>=70 ? 1 : S.Reputation>=45 ? 2 : 3;
+  const pool = F1_TEAMS.filter(t=>t.tier===tier);
+  S.f1TeamIdx = F1_TEAMS.indexOf(pool[rnd(0,pool.length-1)]);
+}
+
+// ══════════════════════════════════════════════
+// SCREENS
+// ══════════════════════════════════════════════
+
+function showScreen(name) {
+  document.getElementById('screen-start').classList.toggle('hidden', name!=='start');
+  document.getElementById('screen-game').classList.toggle('hidden', name!=='game');
+  document.getElementById('screen-gameover').style.display = name==='gameover' ? 'flex' : 'none';
+}
+
+function showResults() {
+  document.getElementById('results-overlay').classList.remove('hidden');
+  renderResultsCard();
+}
+
+function closeResults() {
+  document.getElementById('results-overlay').classList.add('hidden');
+  if (S.gameOver) {
+    showScreen('gameover');
+    renderGameOver();
+  } else {
+    renderAll();
+  }
+}
+
+// ══════════════════════════════════════════════
+// RENDERING
+// ══════════════════════════════════════════════
+
+function renderAll() {
+  renderHeader();
+  renderStats();
+  renderEvents();
+  renderLog();
+  updateRaceBtn();
+}
+
+function renderHeader() {
+  const st = stage();
+  const t = f1team();
+  const teamStr = S.stageIdx===4 && t ? t.name : st.label;
+  document.getElementById('game-header').innerHTML = `
+    <div class="hdr-top">
+      <div>
+        <div class="hdr-name">${esc(S.natFlag)} ${esc(S.name)}</div>
+        <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
+      </div>
+      <div class="hdr-right">
+        <span class="hdr-age">Age ${S.age}</span>
+        <span class="stage-pill">${st.label}</span>
+      </div>
+    </div>`;
+}
+
+function renderStats() {
+  const KEYS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
+  const bars = KEYS.map(k => {
+    const v = S[k];
+    const fc = v>=70?'hi':v>=40?'md':'';
+    return `<div class="stat-bar">
+      <div class="stat-lbl">
+        <span class="stat-name">${k}</span>
+        <span class="stat-val">${v}</span>
+      </div>
+      <div class="stat-track"><div class="stat-fill ${fc}" style="width:${v}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const st = stage();
+  const t = f1team();
+  const contractStr = S.stageIdx===4 && t
+    ? fmtMoney(t.pay)+'/yr'
+    : fmtMoney(st.earnings)+'/season';
+
+  document.getElementById('stats-sec').innerHTML = `
+    <div class="section-title">Driver Stats</div>
+    <div class="stats-grid">${bars}</div>
+    <div class="earn-row">
+      <span class="earn-lbl">Career Earnings</span>
+      <span class="earn-val">${fmtMoney(S.earnings)}</span>
+    </div>
+    <div style="font-size:11px;color:var(--dim);text-align:right;margin-top:4px;margin-bottom:2px">
+      Contract value: ${contractStr}
+    </div>
+    <div class="career-row">
+      <div class="cs"><div class="cs-val">${S.championships}</div><div class="cs-lbl">Titles</div></div>
+      <div class="cs"><div class="cs-val">${S.wins}</div><div class="cs-lbl">Wins</div></div>
+      <div class="cs"><div class="cs-val">${S.podiums}</div><div class="cs-lbl">Podiums</div></div>
+      <div class="cs"><div class="cs-val">${S.seasonsInF1}</div><div class="cs-lbl">F1 Seasons</div></div>
+    </div>`;
+}
+
+function renderEvents() {
+  const cards = S.events.map((ev,i) => {
+    const done = S.resolved.includes(i);
+    const choices = ev.choices.map((c,ci) => {
+      const tags = Object.entries(c.fx||{}).map(([k,v]) => {
+        const cls = v>0?'pos':v<0?'neg':'neu';
+        return `<span class="fx-tag ${cls}">${k} ${v>0?'+':''}${v}</span>`;
+      });
+      if (c.money) tags.push(`<span class="fx-tag pos">+${fmtMoney(c.money)}</span>`);
+      return `<button class="choice-btn" onclick="resolveEvent(${i},${ci})">
+        <div>${esc(c.text)}</div>
+        <div class="fx">${tags.join('')}</div>
+      </button>`;
+    }).join('');
+    return `<div class="ev-card${done?' resolved':''}">
+      <div class="ev-head">
+        <span class="ev-icon">${ev.icon}</span>
+        <div>
+          <div class="ev-cat">${ev.cat}</div>
+          <div class="ev-title">${esc(ev.title)}</div>
+        </div>
+      </div>
+      <div class="ev-desc">${esc(ev.desc)}</div>
+      <div class="ev-choices">${choices}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('events-sec').innerHTML = `
+    <div class="section-title">Season Events · ${S.resolved.length}/${S.events.length} resolved</div>
+    <div class="events-list">${cards}</div>`;
+}
+
+function renderLog() {
+  if (!S.log.length) { document.getElementById('log-sec').innerHTML=''; return; }
+  const entries = S.log.slice(0,10).map(e => {
+    const pc = posClass(e.champPos);
+    const sfx = ordSuffix(e.champPos);
+    let detail = `Avg P${e.avgPos} · ${fmtMoney(e.earnings)}`;
+    if (e.champWon) detail += ' · 🏆 Champion';
+    if (e.newTeamName) detail += ` · → ${e.newTeamName}`;
+    else if (e.promotedTo && !e.newTeamName) detail += ` · → ${e.promotedTo}`;
+    if (e.fired) detail += ' · 🔴 Lost seat';
+    return `<div class="log-entry">
+      <div class="log-h">
+        <span class="log-stage">${e.stage}${e.team?` — ${e.team}`:''}</span>
+        <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
+      </div>
+      <div class="log-detail">${detail}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('log-sec').innerHTML = `
+    <div class="section-title">Career Log</div>
+    <div class="log-list">${entries}</div>`;
+}
+
+function updateRaceBtn() {
+  const btn = document.getElementById('race-btn');
+  const sub = document.getElementById('race-sub');
+  const ready = S.resolved.length >= S.events.length;
+  btn.disabled = !ready;
+  if (sub) sub.textContent = ready
+    ? `${stage().label} · Age ${S.age}`
+    : `Resolve all events first (${S.resolved.length}/${S.events.length})`;
+}
+
+function renderResultsCard() {
+  const r = S.lastResult;
+  if (!r) return;
+  const pc = posClass(r.champPos);
+  const sfx = ordSuffix(r.champPos);
+  const asfx = ordSuffix(r.avgPos);
+  const headline = pickHeadline(r);
+
+  // Deltas
+  const KEYS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
+  const deltaHtml = KEYS.filter(k=>r.deltas[k]!==undefined).map(k=>{
+    const v = r.deltas[k];
+    const cls = v>0?'pos':v<0?'neg':'neu';
+    return `<div class="delta">
+      <span class="delta-n">${k}</span>
+      <span class="delta-v ${cls}">${v>0?'+':''}${v}</span>
+    </div>`;
+  }).join('');
+
+  const champBanner = r.champWon ? `
+    <div class="champ-banner">
+      <div class="trophy">🏆</div>
+      <h3>${r.stage} Champion!</h3>
+      <div style="font-size:12px;color:var(--dim);margin-top:3px">"${S.nickname}" claims the title</div>
+    </div>` : '';
+
+  let moveBanner = '';
+  if (r.newTeamName) {
+    moveBanner = `<div class="move-banner up">🔼 Signed with ${r.newTeamName}</div>`;
+  } else if (r.promoted) {
+    moveBanner = `<div class="move-banner up">🔼 Promoted to ${r.promotedTo}!</div>`;
+  } else if (r.fired) {
+    moveBanner = `<div class="move-banner down">🔴 Lost your seat</div>`;
+  }
+
+  const rows = r.standings.map((d,i) => {
+    return `<tr class="${d.me?'me':''}">
+      <td>${i+1}</td>
+      <td>${d.me?esc(S.name):d.name}</td>
+      <td class="pts">${d.pts}</td>
+    </tr>`;
+  }).join('');
+
+  const btnLabel = S.gameOver ? 'See Career Summary →' : 'Continue →';
+
+  document.getElementById('res-card').innerHTML = `
+    <div class="res-season">${r.stage} · Season ${r.season}</div>
+    <div class="res-pos ${pc}">${r.champPos}${sfx}</div>
+    <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
+    <div class="res-headline">"${S.nickname}" — ${esc(headline)}</div>
+    ${champBanner}
+    ${deltaHtml ? `<div class="deltas-grid">${deltaHtml}</div>` : ''}
+    <div class="earn-banner">
+      <span class="earn-b-lbl">Season Earnings</span>
+      <span class="earn-b-val">${fmtMoney(r.earnings)}</span>
+    </div>
+    ${moveBanner}
+    <div class="section-title" style="margin:0 0 6px">Championship Standings</div>
+    <table class="standings">
+      <thead><tr><th>#</th><th>Driver</th><th style="text-align:right">PTS</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <button class="btn-continue" onclick="closeResults()">${btnLabel}</button>`;
+}
+
+function pickHeadline(r) {
+  if (r.champWon)       return ['Championship glory at last!','Dominant title campaign','The title is theirs!'][rnd(0,2)];
+  if (r.champPos <= 3)  return ['Championship podium — the future is bright','Strong season raises expectations','Closing in on the top'][rnd(0,2)];
+  if (r.fired)          return ['A difficult year raises hard questions','Under pressure from all sides','The comeback starts now'][rnd(0,2)];
+  if (r.avgPos <= 5)    return ['Impressive pace earns paddock respect','Fast but fortune wasn\'t kind','A season of what-ifs'][rnd(0,2)];
+  return ['Experience gained on the road to glory','Character-building campaign','The journey continues'][rnd(0,2)];
+}
+
+// ══════════════════════════════════════════════
+// GAME OVER
+// ══════════════════════════════════════════════
+
+function renderGameOver() {
+  const el = document.getElementById('screen-gameover');
+  const reason = S.age>=40 ? 'Retired at 40' : 'Career ended — no more seats available';
+  const rating = calcRating();
+
+  const stats = [
+    {v:S.championships, l:'Championships', g:S.championships>0},
+    {v:S.wins,          l:'Race Wins',      g:false},
+    {v:S.podiums,       l:'Podiums',        g:false},
+    {v:S.seasonsInF1,   l:'F1 Seasons',     g:false},
+    {v:S.log.length,    l:'Total Seasons',  g:false},
+    {v:fmtMoney(S.earnings), l:'Career Earnings', g:true}
+  ];
+
+  const statBoxes = stats.map(s=>`
+    <div class="sum-stat">
+      <div class="sum-v ${s.g?'gold':''}">${s.v}</div>
+      <div class="sum-l">${s.l}</div>
+    </div>`).join('');
+
+  const logItems = S.log.map(e=>{
+    const pc = posClass(e.champPos);
+    const sfx = ordSuffix(e.champPos);
+    let d = `Avg P${e.avgPos}`;
+    if (e.champWon) d += ' · 🏆';
+    if (e.fired) d += ' · 🔴';
+    return `<div class="log-entry">
+      <div class="log-h">
+        <span class="log-stage">${e.stage}${e.team?` — ${e.team}`:''}</span>
+        <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
+      </div>
+      <div class="log-detail">${d} · ${fmtMoney(e.earnings)}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="go-title">
+      <div style="font-size:48px">🏁</div>
+      <h1>Career Over</h1>
+      <p>${esc(reason)}</p>
+    </div>
+    <div class="rating-box">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px">Career Rating</div>
+      <div class="grade">${rating.grade}</div>
+      <div class="grade-lbl">${rating.label}</div>
+    </div>
+    <div class="sum-grid">${statBoxes}</div>
+    <div style="width:100%">
+      <div class="section-title">Full Career Log</div>
+      <div class="log-list">${logItems}</div>
+    </div>
+    <button class="btn-primary" onclick="restartGame()" style="margin-top:8px">Play Again</button>`;
+}
+
+function calcRating() {
+  const sc = S.championships*30 + S.wins*5 + S.podiums*2 + S.seasonsInF1*3;
+  if (sc>=200) return {grade:'S', label:'All-time Legend'};
+  if (sc>=120) return {grade:'A', label:'Championship Contender'};
+  if (sc>=60)  return {grade:'B', label:'Solid F1 Career'};
+  if (sc>=25)  return {grade:'C', label:'Journeyman Pro'};
+  if (sc>=8)   return {grade:'D', label:'Nearly Made It'};
+  return          {grade:'F', label:'Back to Karting'};
+}
+
+function restartGame() {
+  clearSave();
+  S = null;
+  selectedNat = null;
+  document.getElementById('screen-gameover').style.display = 'none';
+  showScreen('start');
+  document.getElementById('driver-name').value = '';
+  document.querySelectorAll('.nat-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('start-btn').disabled = true;
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildNatGrid();
+  document.getElementById('driver-name').addEventListener('input', checkReady);
+
+  if (load() && S) {
+    if (S.gameOver) {
+      showScreen('gameover');
+      renderGameOver();
+    } else {
+      showScreen('game');
+      renderAll();
+    }
+  } else {
+    showScreen('start');
+  }
+});
+</script>
+</body>
+</html>
