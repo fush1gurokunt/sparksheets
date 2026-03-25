@@ -2,8 +2,6 @@
   "version": 2,
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/pitlife", "dest": "/pitlife/index.html" },
-    { "src": "/pitlife/", "dest": "/pitlife/index.html" },
     { "src": "/privacy", "dest": "/privacy.html" },
     { "src": "/privacy.html", "dest": "/privacy.html" },
     { "src": "/terms", "dest": "/terms.html" },
