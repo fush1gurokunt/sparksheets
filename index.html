@@ -1904,9 +1904,12 @@
       </div>
     </a>
     <div class="nav-right">
-      <button class="nav-upgrade-btn" id="nav-upgrade-btn" onclick="document.getElementById('upgrade-panel').classList.add('open');document.getElementById('upgrade-panel').scrollIntoView({behavior:'smooth',block:'center'})">
+      <a class="nav-upgrade-btn" id="nav-upgrade-btn" href="https://buy.stripe.com/bJe3cueKLdQv3EHcd1a3u00" target="_blank" rel="noopener">
         Upgrade to Pro
-      </button>
+      </a>
+      <div class="nav-pro-badge" id="nav-pro-badge" style="display:none">
+        Pro ✓
+      </div>
     </div>
   </div>
 </nav>
@@ -1929,7 +1932,7 @@
     <div>
       <strong>You've used your 5 free resources this month!</strong>
       Thanks for trying SparkSheets. Upgrade to SparkSheets Pro for unlimited resources.
-      <button onclick="document.getElementById('upgrade-panel').classList.add('open');document.getElementById('upgrade-panel').scrollIntoView({behavior:'smooth',block:'center'})" style="margin-left:0.5rem;background:none;border:none;color:#92400e;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:700;padding:0;">See upgrade options →</button>
+      <a href="https://buy.stripe.com/bJe3cueKLdQv3EHcd1a3u00" target="_blank" rel="noopener" style="margin-left:0.75rem;display:inline-block;background:#7c3aed;color:white;text-decoration:none;border-radius:7px;padding:0.35rem 0.9rem;font-family:'Inter',-apple-system,sans-serif;font-size:0.8rem;font-weight:700;">Upgrade to SparkSheets Pro — £4.99/month</a>
     </div>
   </div>
 </div>
@@ -1940,15 +1943,9 @@
     <div class="upgrade-emoji">✨</div>
     <div class="upgrade-title">You've used your 5 free resources this month!</div>
     <div class="upgrade-body">Upgrade to <strong>SparkSheets Pro</strong> for unlimited worksheets and lesson plans — perfect for busy NI primary teachers.</div>
-    <div class="upgrade-price">£4.99 / month — coming soon</div>
-    <div class="upgrade-email-row" id="upgrade-email-row">
-      <input type="email" id="upgrade-email" placeholder="your@email.com" />
-      <button class="btn-purple" onclick="notifyUpgrade()">Notify Me</button>
-    </div>
-    <div class="upgrade-confirmed" id="upgrade-confirmed">
-      ✓ You're on the list! We'll email you when Pro launches.
-    </div>
-    <div class="upgrade-note">No payment needed yet — we'll notify you when it's ready.</div>
+    <div class="upgrade-price">£4.99 / month</div>
+    <a href="https://buy.stripe.com/bJe3cueKLdQv3EHcd1a3u00" target="_blank" rel="noopener" class="btn-purple" style="display:inline-block;text-decoration:none;text-align:center;margin-top:0.5rem;">Upgrade to SparkSheets Pro — £4.99/month</a>
+    <div class="upgrade-note">Instant access after payment — unlimited resources forever.</div>
   </div>
 </div>
 
@@ -2152,25 +2149,37 @@
     return count;
   }
 
+  function isPro() {
+    return localStorage.getItem('sparksheets_pro') === 'true';
+  }
+
+  function updateNavForPro() {
+    if (isPro()) {
+      document.getElementById('nav-upgrade-btn').style.display = 'none';
+      document.getElementById('nav-pro-badge').style.display = 'flex';
+    } else {
+      document.getElementById('nav-upgrade-btn').style.display = '';
+      document.getElementById('nav-pro-badge').style.display = 'none';
+    }
+  }
+
   function updateUsageDisplay() {
     const count = getUsageCount();
     document.getElementById('usage-count').textContent = count;
-    if (count >= 5) document.getElementById('usage-banner').classList.add('visible');
+    if (!isPro() && count >= 5) document.getElementById('usage-banner').classList.add('visible');
   }
 
-  updateUsageDisplay();
-
-  // ── Upgrade / email notify ─────────────────────────────────────
-  function notifyUpgrade() {
-    const email = document.getElementById('upgrade-email').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('upgrade-email').focus();
-      return;
+  // Handle ?upgraded=true on load
+  (function handleUpgradeReturn() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgraded') === 'true') {
+      localStorage.setItem('sparksheets_pro', 'true');
+      history.replaceState(null, '', window.location.pathname);
     }
-    localStorage.setItem('spark_notify_email', email);
-    document.getElementById('upgrade-confirmed').classList.add('show');
-    document.getElementById('upgrade-email-row').style.display = 'none';
-  }
+  })();
+
+  updateNavForPro();
+  updateUsageDisplay();
 
   // ── Resource history ───────────────────────────────────────────
   function saveHistory(text, yearGroup, subject, style) {
@@ -3034,7 +3043,7 @@
   // ── Generate ──────────────────────────────────────────────────
   async function generate() {
     // Usage gate — check before anything else
-    if (getUsageCount() >= 5) {
+    if (!isPro() && getUsageCount() >= 5) {
       const panel = document.getElementById('upgrade-panel');
       panel.classList.add('open');
       panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
