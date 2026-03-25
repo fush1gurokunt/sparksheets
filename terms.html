@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Service — SparkSheets</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,6 +15,7 @@
       --purple:      #7c3aed;
       --purple-dark: #5b21b6;
       --purple-100:  #ede9fe;
+      --green:       #059669;
       --gray-900: #111827;
       --gray-700: #374151;
       --gray-600: #4b5563;
@@ -25,6 +27,7 @@
       --white:    #ffffff;
       --font-ui:   'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-body: 'Nunito', -apple-system, sans-serif;
+      --radius-sm: 8px;
     }
 
     body {
@@ -68,30 +71,74 @@
 
     .nav-logo-icon {
       width: 34px; height: 34px;
-      background: linear-gradient(135deg, var(--purple) 0%, #9333ea 100%);
-      border-radius: 9px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
     }
 
     .nav-logo-name {
-      font-family: var(--font-body);
+      font-family: var(--font-ui);
       font-size: 1.05rem;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--gray-900);
-      display: block;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
     }
 
     .nav-logo-name .accent { color: var(--purple); }
 
     .nav-tagline {
       font-family: var(--font-ui);
-      font-size: 0.67rem;
-      color: var(--gray-400);
+      font-size: 0.62rem;
       font-weight: 500;
+      color: var(--gray-400);
       letter-spacing: 0.01em;
-      display: block;
+      line-height: 1;
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    .nav-upgrade-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1.1rem;
+      background: var(--purple);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: -0.01em;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.28);
+      text-decoration: none;
+    }
+
+    .nav-upgrade-btn:hover {
+      background: var(--purple-dark);
+      box-shadow: 0 3px 12px rgba(124,58,237,0.4);
+    }
+
+    .nav-pro-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.9rem;
+      background: #ecfdf5;
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--green);
     }
 
     .content {
@@ -195,15 +242,24 @@
   <div class="nav-inner">
     <a href="/" class="nav-logo">
       <div class="nav-logo-icon">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        <svg width="34" height="34" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#7C3AED" d="M7 1.5 L17 1.5 L12.5 12 L17 12 L13.5 22.5 L6 22.5 L9.5 12 L5 12 Z"/>
+          <path fill="#F59E0B" d="M15 1.5 L17 1.5 L12.5 12 L17 12 L13.5 22.5 L11.5 22 L15 11.5 L11 11 Z"/>
         </svg>
       </div>
-      <div>
+      <div class="nav-logo-text">
         <span class="nav-logo-name">Spark<span class="accent">Sheets</span></span>
         <span class="nav-tagline">NI Curriculum worksheets, generated in seconds</span>
       </div>
     </a>
+    <div class="nav-right">
+      <a class="nav-upgrade-btn" id="nav-upgrade-btn" href="https://buy.stripe.com/bJe3cueKLdQv3EHcd1a3u00" target="_blank" rel="noopener">
+        Upgrade to Pro
+      </a>
+      <div class="nav-pro-badge" id="nav-pro-badge" style="display:none">
+        Pro ✓
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -256,8 +312,14 @@
 <footer>
   <strong style="color:#4b5563">SparkSheets</strong> — Built for Northern Ireland primary teachers &nbsp;·&nbsp; © 2026
   &nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="/terms.html">Terms of Service</a>
+  <a href="/privacy">Privacy Policy</a> &nbsp;|&nbsp; <a href="/terms">Terms of Service</a>
 </footer>
 
+<script>
+  if (localStorage.getItem('sparksheets_pro') === 'true') {
+    document.getElementById('nav-upgrade-btn').style.display = 'none';
+    document.getElementById('nav-pro-badge').style.display = 'flex';
+  }
+</script>
 </body>
 </html>
