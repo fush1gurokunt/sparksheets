@@ -1128,20 +1128,20 @@
     /* ── FS ACTIVITY GRID ──────────────────────────────── */
     .ws-fs-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
       margin: 1.25rem 0 1.5rem;
     }
     .ws-fs-grid-item {
       border: 2px solid #1f2937;
       border-radius: 8px;
-      padding: 1rem 0.75rem;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.65rem;
-      min-height: 95px;
+      gap: 0.5rem;
+      min-height: 170px;
       background: #fff;
     }
 
@@ -1161,6 +1161,18 @@
       min-width: 2.4rem;
       margin: 0 1px;
       vertical-align: bottom;
+    }
+
+    /* ── FS PHONICS TARGET SOUND ─────────────────────────── */
+    .ws-fs-phonics-target {
+      font-size: 48px;
+      font-weight: 900;
+      color: #7c3aed;
+      text-align: center;
+      display: block;
+      margin: 0.25rem 0 1.25rem;
+      letter-spacing: 0.05em;
+      font-family: var(--font-body);
     }
 
     /* ── FS NUMBER SEQUENCE (caterpillar) ──────────────── */
@@ -1258,8 +1270,8 @@
 
     /* ── FS IMAGE SLOTS ────────────────────────────────── */
     .ws-fs-img-slot {
-      width: 90px;
-      height: 90px;
+      width: 140px;
+      height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1268,8 +1280,8 @@
       position: relative;
     }
     .ws-fs-img-slot .ws-fs-img-loading {
-      width: 90px;
-      height: 90px;
+      width: 140px;
+      height: 140px;
       border-radius: 6px;
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
@@ -1280,11 +1292,14 @@
       100% { background-position: -200% 0; }
     }
     .ws-fs-img {
-      width: 90px;
-      height: 90px;
+      width: 140px;
+      height: 140px;
       object-fit: contain;
       display: block;
-      filter: grayscale(1) contrast(1.1);
+      filter: grayscale(100%) contrast(150%);
+      border: none;
+      box-shadow: none;
+      padding: 0;
     }
     /* Hide SVG fallback when image has loaded */
     .ws-fs-grid-item.has-img .ws-fs-count-fallback { display: none; }
@@ -1909,8 +1924,8 @@
       #worksheet-paper.ws-fs { border: 2pt solid #333; }
 
       /* images in print */
-      .ws-fs-img { width: 70pt; height: 70pt; filter: grayscale(1) contrast(1.2); }
-      .ws-fs-img-slot { width: 70pt; height: 70pt; }
+      .ws-fs-img { width: 100pt; height: 100pt; filter: grayscale(100%) contrast(150%); border: none; box-shadow: none; }
+      .ws-fs-img-slot { width: 100pt; height: 100pt; }
       .ws-fs-img-loading { display: none; }
       .ws-img-loading, .ws-fs-img-loading { display: none; }
       .ws-img-ks1 { width: 65pt; height: 65pt; }
@@ -2710,6 +2725,16 @@
     return PHONICS_EMOJI[visible.slice(0, 2)] || '🖼️';
   }
 
+  // B&W SVG placeholder used when DALL-E fails on FS phonics worksheets
+  function fsFallbackSvg() {
+    return `<svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" style="display:block">` +
+      `<rect x="4" y="4" width="132" height="132" fill="white" stroke="#1f2937" stroke-width="3" rx="6"/>` +
+      `<polyline points="4,105 40,68 68,88 95,52 136,88 136,136 4,136" fill="#f3f4f6" stroke="none"/>` +
+      `<polyline points="4,105 40,68 68,88 95,52 136,88" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linejoin="round"/>` +
+      `<circle cx="44" cy="40" r="16" fill="none" stroke="#9ca3af" stroke-width="2.5"/>` +
+      `</svg>`;
+  }
+
   // Large styled HTML visual used instead of a broken DALL-E image
   function buildHtmlVisual(word) {
     const key = word.toLowerCase().trim();
@@ -2781,7 +2806,7 @@
     if (overrides[key]) return overrides[key] + suffix;
 
     if (yg.includes('p1') || yg.includes('p2') || yg.includes('foundation'))
-      return `Simple black and white line drawing of a ${word}${topicCtx}, child-friendly, clean, worksheet illustration style, no shading` + suffix;
+      return `Simple black and white line drawing of a ${word}${topicCtx}, coloring book style, thick clean outlines, no fill, no shading, no grey tones, pure black lines on pure white background, no text, no labels, child-friendly illustration, similar to a primary school worksheet clipart` + suffix;
     if (yg.includes('p3') || yg.includes('p4') || yg.includes('key stage 1'))
       return `Simple black and white illustration of ${word}${topicCtx}, clean, educational worksheet style, no background` + suffix;
     if (yg.includes('p5') || yg.includes('p6'))
@@ -2829,13 +2854,12 @@
       slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
       try {
         const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
-        const fe = phonicsEmoji(word);
-        slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:2.5rem;line-height:1;align-items:center;justify-content:center;width:90px;height:90px">${fe}</div>`;
+        slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div>`;
         const parent = slot.closest('.ws-fs-grid-item');
         if (parent) parent.classList.add('has-img');
       } catch (e) {
         console.warn(`FS image failed for "${word}":`, e);
-        slot.innerHTML = '<span style="font-size:2.5rem;line-height:1;display:flex;align-items:center;justify-content:center;width:90px;height:90px">🖼️</span>';
+        slot.innerHTML = `<div style="display:flex;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div>`;
       }
     }));
   }
@@ -2988,14 +3012,12 @@
 
   function fsWordGrid(wordsStr, imgWords = [], imageMap = null) {
     const words = wordsStr.split(',').map(w => w.trim()).filter(Boolean);
-    function makeEmojiCell(gridWord) {
-      const e = phonicsEmoji(gridWord);
-      return `<div class="ws-fs-img-slot"><span style="font-size:2.5rem;line-height:1;` +
-        `display:flex;align-items:center;justify-content:center;width:90px;height:90px">${e}</span></div>`;
+    function makeEmojiCell() {
+      return `<div class="ws-fs-img-slot"><div style="display:flex;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
     }
     function makeTextCell(label) {
       // Absolute last resort: bordered box with word text — never an empty box
-      return `<div class="ws-fs-img-slot"><div style="width:90px;height:90px;border:2.5px solid #1f2937;` +
+      return `<div class="ws-fs-img-slot"><div style="width:140px;height:140px;border:2.5px solid #1f2937;` +
         `border-radius:4px;display:flex;align-items:center;justify-content:center;padding:4px">` +
         `<span style="font-size:1.1rem;font-weight:bold;color:#1f2937;text-align:center;line-height:1.2">` +
         `${label}</span></div></div>`;
@@ -3009,13 +3031,12 @@
           if (src && src.startsWith('html:')) {
             imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
           } else if (src) {
-            const fe = phonicsEmoji(imgWords[i]);
-            imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:2.5rem;line-height:1;align-items:center;justify-content:center;width:90px;height:90px">${fe}</div></div>`;
+            imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
           } else {
-            imgContent = makeEmojiCell(word);
+            imgContent = makeEmojiCell();
           }
         } else {
-          imgContent = makeEmojiCell(word);
+          imgContent = makeEmojiCell();
         }
         // Absolute last resort — should never trigger, but guarantees no empty box
         if (!imgContent) imgContent = makeTextCell(imgWords[i] || word.replace(/_/g, '').trim() || '?');
@@ -3026,8 +3047,7 @@
   }
 
   function fsCountGrid(itemsStr, imgWords = [], imageMap = null) {
-    const emojiCell = '<div class="ws-fs-img-slot"><span style="font-size:2.5rem;line-height:1;' +
-      'display:flex;align-items:center;justify-content:center;width:90px;height:90px">🖼️</span></div>';
+    const emojiCell = `<div class="ws-fs-img-slot"><div style="display:flex;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
     const items = itemsStr.split(',').map((item, i) => {
       const [shape, count] = item.trim().split(':');
       const svgHtml = fsCountShapes(shape || 'circle', count || '3');
@@ -3039,8 +3059,7 @@
           imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
           hasImgClass = ' has-img';
         } else if (src) {
-          const fe = phonicsEmoji(imgWords[i]);
-          imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:2.5rem;line-height:1;align-items:center;justify-content:center;width:90px;height:90px">${fe}</div></div>`;
+          imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
           hasImgClass = ' has-img';
         } else {
           imgContent = emojiCell;
@@ -3177,6 +3196,11 @@
 
     // ── Foundation Stage marker [FS] — strip, applied via JS ──────
     html = html.replace(/\[FS\]/g, '');
+
+    // ── Foundation Stage target sound [FS_TARGET:sh] ──────────────
+    html = html.replace(/\[FS_TARGET:([^\]]+)\]/g, (_, sound) =>
+      `<span class="ws-fs-phonics-target">${sound.trim()}</span>`
+    );
 
     // ── Answer key page break [ANSWER_KEY] ────────────────────────
     html = html.replace(/\[ANSWER_KEY\]/g,
