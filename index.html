@@ -1242,6 +1242,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      position: relative;
     }
     .ws-img {
       object-fit: contain;
@@ -1262,6 +1264,8 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
     }
     .ws-fs-img-slot .ws-fs-img-loading {
       width: 90px;
@@ -2758,6 +2762,7 @@
       // Buildings and scenes — force single object, centred
       shop:    'single friendly cartoon shop front with an awning, simple black outline, single object only, centred, isolated on white background',
       shell:   'single sea shell, spiral shape, simple black outline drawing, isolated on white',
+      sheep:   'single fluffy white sheep, simple black outline drawing, side view, isolated on white background, absolutely no text',
       house:   'single simple house with triangular roof, simple black outline drawing, single object only, isolated on white',
       home:    'single simple house with triangular roof, simple black outline drawing, single object only, isolated on white',
       school:  'single simple school building with windows, simple black outline drawing, single object only, isolated on white',
@@ -2824,7 +2829,8 @@
       slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
       try {
         const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
-        slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}">`;
+        const fe = phonicsEmoji(word);
+        slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:2.5rem;line-height:1;align-items:center;justify-content:center;width:90px;height:90px">${fe}</div>`;
         const parent = slot.closest('.ws-fs-grid-item');
         if (parent) parent.classList.add('has-img');
       } catch (e) {
@@ -2865,7 +2871,9 @@
       if (!slot) return;
       try {
         const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
-        slot.innerHTML = `<img src="${src}" class="ws-img ws-img-${sizeClass}" alt="${word}">`;
+        const fe = phonicsEmoji(word);
+        const emojiSize = sizeClass === 'p7' ? '1.3rem' : sizeClass === 'ks2' ? '1.7rem' : '2rem';
+        slot.innerHTML = `<img src="${src}" class="ws-img ws-img-${sizeClass}" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:${emojiSize};line-height:1;align-items:center;justify-content:center;width:100%;height:100%">${fe}</div>`;
       } catch (e) {
         console.warn(`WS image failed for "${word}":`, e);
         const emojiSize = sizeClass === 'p7' ? '1.3rem' : sizeClass === 'ks2' ? '1.7rem' : '2rem';
@@ -3001,7 +3009,8 @@
           if (src && src.startsWith('html:')) {
             imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
           } else if (src) {
-            imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}"></div>`;
+            const fe = phonicsEmoji(imgWords[i]);
+            imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:2.5rem;line-height:1;align-items:center;justify-content:center;width:90px;height:90px">${fe}</div></div>`;
           } else {
             imgContent = makeEmojiCell(word);
           }
@@ -3030,7 +3039,8 @@
           imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
           hasImgClass = ' has-img';
         } else if (src) {
-          imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}"></div>`;
+          const fe = phonicsEmoji(imgWords[i]);
+          imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:2.5rem;line-height:1;align-items:center;justify-content:center;width:90px;height:90px">${fe}</div></div>`;
           hasImgClass = ' has-img';
         } else {
           imgContent = emojiCell;
