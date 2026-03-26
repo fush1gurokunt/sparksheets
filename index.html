@@ -2865,13 +2865,24 @@
       const slot = document.getElementById(`fsimg-${i}`);
       if (!slot) return;
       slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
+      const prompt = buildDallePrompt(word, yearGroup, topic);
+      let src = null;
       try {
-        const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
+        src = await generateDalleImage(prompt);
+      } catch (e) {
+        console.warn(`FS image failed for "${word}", retrying in 1s…`, e);
+        await new Promise(r => setTimeout(r, 1000));
+        try {
+          src = await generateDalleImage(prompt);
+        } catch (e2) {
+          console.warn(`FS image failed for "${word}" after retry:`, e2);
+        }
+      }
+      if (src) {
         slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div>`;
         const parent = slot.closest('.ws-fs-grid-item');
         if (parent) parent.classList.add('has-img');
-      } catch (e) {
-        console.warn(`FS image failed for "${word}":`, e);
+      } else {
         slot.innerHTML = `<div style="display:flex;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div>`;
       }
     }));
@@ -3453,18 +3464,18 @@ CRITICAL: Choose ONE activity type for the entire worksheet. The whole page repe
 Output the worksheet as:
 1. A single # heading (the activity title, e.g. "Finish the Word" or "Count and Write")
 2. One instruction line in plain text — max 8 words, written directly to the child (e.g. "Write the missing letters.")
-3. [WS_IMGWORDS:word1,word2,word3,word4] — list the 4 most visually representable COMPLETE words from your activity. For phonics (___at → cat, ___ip → ship, etc.) provide the full word. For counting, provide the name of the thing being counted. These are used to generate illustration images.
+3. [WS_IMGWORDS:word1,word2,word3,word4,word5,word6] — list the 6 most visually representable COMPLETE words from your activity. For P1, always list exactly 6 words. For phonics (___at → cat, ___ip → ship, etc.) provide the full word. For counting, provide the name of the thing being counted. These are used to generate illustration images.
 4. ONE of the four activity markers below — nothing else
 
 ────────────────────────────────────────────
 ACTIVITY A — FINISH THE WORD (phonics/spelling)
 ────────────────────────────────────────────
-[FS_WORD_GRID:word1,word2,word3,word4,word5,word6,word7,word8]
+[FS_WORD_GRID:word1,word2,word3,word4,word5,word6]
 Show blanks as ___ (three underscores) at start or end of the word.
-Use 8 words sharing the same phoneme/word family. No [WORDBOX:] needed.
+Use exactly 6 words sharing the same phoneme/word family. For P1, generate exactly 6 words maximum. Never more than 6. No [WORDBOX:] needed.
 
 Example for 'at' family:
-[FS_WORD_GRID:___at,___og,___en,___ig,___it,c___,h___,b___]
+[FS_WORD_GRID:___at,___og,___en,___ig,___it,___ot]
 
 ────────────────────────────────────────────
 ACTIVITY B — COUNT AND WRITE (maths)
@@ -3556,8 +3567,8 @@ Write the missing letters.
 [THEME:literacy]
 [FS]
 
-[WS_IMGWORDS:cat,dog,hen,pig]
-[FS_WORD_GRID:___at,___og,___en,___ig,___it,___op,___ub,___ap]
+[WS_IMGWORDS:cat,dog,hen,pig,fox,bug]
+[FS_WORD_GRID:___at,___og,___en,___ig,___ox,___ug]
 
 ---
 
@@ -3649,7 +3660,7 @@ ${includeAnswers === 'yes'
 Additional rules:
 - Use Northern Ireland terminology throughout: P1–P7, Foundation Stage (P1–P2), Key Stage 1 (P3–P4), Key Stage 2 (P5–P7)
 - Difficulty and format are determined automatically by year group — follow the AGE-DIFFERENTIATION RULES above exactly
-- For P1/P2: ALWAYS include [FS] after [THEME:name], [WS_IMGWORDS] (4 words), then ONE of the four FS activity markers (FS_WORD_GRID / FS_COUNT_GRID / FS_SEQUENCE / FS_PATTERN), NEVER numbered questions, NEVER star markers
+- For P1: ALWAYS include [FS] after [THEME:name], [WS_IMGWORDS] with exactly 6 words, [FS_WORD_GRID] with exactly 6 words. For P1, generate exactly 6 words maximum — never more than 6. For P2: same but [WS_IMGWORDS] with 4 words. Both: use ONE of the four FS activity markers (FS_WORD_GRID / FS_COUNT_GRID / FS_SEQUENCE / FS_PATTERN), NEVER numbered questions, NEVER star markers
 - For P3–P7: ALWAYS include [WS_IMGWORDS] immediately after [THEME:name] (3 words for P3/P4, 2 for P5/P6, 1 for P7)
 - For P7: include SEAG transfer test-style questions (multiple choice + free response) in Maths and English
 - Answer keys MUST use [ANSWER_KEY] marker and appear ONLY after the last question — never in the questions
