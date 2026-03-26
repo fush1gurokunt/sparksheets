@@ -2703,7 +2703,7 @@
   // Words that reliably cause DALL-E to embed text regardless of prompt.
   // These skip DALL-E entirely and display a large styled HTML visual instead.
   const TEXT_VISUAL_WORDS = new Set([
-    'ship','fish','boat','train','bus','van','truck','plane',
+    'fish','boat','train','bus','van','truck','plane',
   ]);
 
   // Emoji displayed beside the word in the HTML visual fallback
@@ -2774,7 +2774,7 @@
       tool:   'hammer, simple black outline drawing',
       cool:   'ice cube, simple black outline drawing',
       // Transport — abstract shape descriptions to avoid DALL-E adding text
-      ship:    'large oval hull shape with a small rectangle on top, simple black outline, no text, isolated on white',
+      ship:    'Simple black and white cartoon outline of a boat, side view, basic shape, thick lines, no colour, no detail, child-friendly',
       fish:    'simple fish silhouette shape, oval body with triangle tail, black outline only, no text, isolated on white',
       boat:    'simple curved hull shape with a vertical mast line, black outline only, no text, isolated on white',
       train:   'two rectangles side by side with two small circles below for wheels, black outline only, no text, isolated on white',
@@ -2786,7 +2786,7 @@
       bike:    'two circles connected by diagonal lines, simple bicycle silhouette, black outline only, no text, isolated on white',
       // Buildings and scenes — force single object, centred
       shop:    'single friendly cartoon shop front with an awning, simple black outline, single object only, centred, isolated on white background',
-      shell:   'single sea shell, spiral shape, simple black outline drawing, isolated on white',
+      shell:   'Simple black and white cartoon outline of a seashell, basic shape, thick lines, no detail, suitable for a P1 worksheet',
       sheep:   'single fluffy white sheep, simple black outline drawing, side view, isolated on white background, absolutely no text',
       house:   'single simple house with triangular roof, simple black outline drawing, single object only, isolated on white',
       home:    'single simple house with triangular roof, simple black outline drawing, single object only, isolated on white',
@@ -2806,7 +2806,7 @@
     if (overrides[key]) return overrides[key] + suffix;
 
     if (yg.includes('p1') || yg.includes('p2') || yg.includes('foundation'))
-      return `Simple black and white line drawing of a ${word}${topicCtx}, coloring book style, thick clean outlines, no fill, no shading, no grey tones, pure black lines on pure white background, no text, no labels, child-friendly illustration, similar to a primary school worksheet clipart` + suffix;
+      return `Simple black and white cartoon outline drawing of a ${word}${topicCtx}, thick clean black lines, minimal detail, white background, child-friendly, similar to a simple colouring book illustration for young children, no shading, no realistic detail, no text` + suffix;
     if (yg.includes('p3') || yg.includes('p4') || yg.includes('key stage 1'))
       return `Simple black and white illustration of ${word}${topicCtx}, clean, educational worksheet style, no background` + suffix;
     if (yg.includes('p5') || yg.includes('p6'))
@@ -3040,6 +3040,9 @@
         }
         // Absolute last resort — should never trigger, but guarantees no empty box
         if (!imgContent) imgContent = makeTextCell(imgWords[i] || word.replace(/_/g, '').trim() || '?');
+      } else if (imgWords.length > 0 && i < imgWords.length) {
+        // imageMap not yet available — render pulsing placeholder slot for later injection
+        imgContent = `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`;
       }
       return `<div class="ws-fs-grid-item">${imgContent}<div class="ws-fs-word">${rendered}</div></div>`;
     }).join('');
@@ -3064,6 +3067,8 @@
         } else {
           imgContent = emojiCell;
         }
+      } else if (imageMap === null && imgWords.length > 0 && i < imgWords.length) {
+        imgContent = `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`;
       }
       const fallbackCls = imgContent ? ' ws-fs-count-fallback' : '';
       return `<div class="ws-fs-grid-item${hasImgClass}">${imgContent}<div class="${fallbackCls.trim()}">${svgHtml}</div><span class="write-box"></span></div>`;
@@ -3722,16 +3727,16 @@ Reference Thinking Skills and Personal Capabilities where relevant. Keep languag
         outputEl.classList.add('ws-lesson-plan');
         document.getElementById('worksheet-paper').classList.add('ws-lesson-plan');
       }
-      // DALL-E image generation — for FS: always pre-generate (or emoji-fallback)
-      // then re-render so every box has content; for non-FS: inject illustration row
+      // DALL-E image generation — render worksheet immediately with placeholders,
+      // then inject images in parallel as they arrive (both FS and non-FS)
       const wsImgWordsMatch = fullText.match(/\[(?:WS|FS)_IMGWORDS:([^\]]+)\]/);
       if (wsImgWordsMatch) {
         const wsImgWords = wsImgWordsMatch[1].split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
         const imgTopic = [subject, prompt].filter(Boolean).join(' ');
         if (wsImgWords.length) {
           if (isFS) {
-            const imageMap = await generateAllImagesMap(wsImgWords, yearGroup, imgTopic);
-            outputEl.innerHTML = markdownToHtml(fullText, imageMap);
+            outputEl.innerHTML = markdownToHtml(fullText, null);
+            injectFSImages(wsImgWords, yearGroup, imgTopic);
           } else {
             injectWSImages(wsImgWords, yearGroup, imgTopic);
           }
