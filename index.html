@@ -1303,6 +1303,11 @@
     }
     /* Hide SVG fallback when image has loaded */
     .ws-fs-grid-item.has-img .ws-fs-count-fallback { display: none; }
+    .ws-img-loading-notice {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin: 0 0 0.6rem;
+    }
 
     /* ── STREAMING CURSOR ─────────────────────────────── */
     .streaming::after {
@@ -2848,6 +2853,14 @@
 
   // Foundation Stage: inject images into pre-created grid item slots
   async function injectFSImages(imgWords, yearGroup, topic) {
+    const firstGrid = document.querySelector('.ws-fs-grid');
+    let notice = null;
+    if (firstGrid) {
+      notice = document.createElement('div');
+      notice.className = 'ws-img-loading-notice';
+      notice.textContent = '✨ Loading illustrations...';
+      firstGrid.parentNode.insertBefore(notice, firstGrid);
+    }
     await Promise.all(imgWords.map(async (word, i) => {
       const slot = document.getElementById(`fsimg-${i}`);
       if (!slot) return;
@@ -2862,6 +2875,7 @@
         slot.innerHTML = `<div style="display:flex;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div>`;
       }
     }));
+    if (notice) notice.remove();
   }
 
   // KS1/KS2/P7: inject an illustration row into the top of #output
@@ -2890,6 +2904,11 @@
       outputEl.prepend(row);
     }
 
+    const notice = document.createElement('div');
+    notice.className = 'ws-img-loading-notice';
+    notice.textContent = '✨ Loading illustrations...';
+    row.parentNode.insertBefore(notice, row);
+
     await Promise.all(imgWords.map(async (word, i) => {
       const slot = document.getElementById(`wsimg-${i}`);
       if (!slot) return;
@@ -2904,6 +2923,7 @@
         slot.innerHTML = `<span style="font-size:${emojiSize};line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%">🖼️</span>`;
       }
     }));
+    notice.remove();
   }
 
   // Generate all images sequentially before rendering — never skips a word.
