@@ -10,6 +10,7 @@ module.exports = async (req, res) => {
   }
 
   const apiKey = process.env.GEMINI_API;
+  console.log('GEMINI_API_KEY present:', !!apiKey, 'length:', apiKey ? apiKey.length : 0);
   if (!apiKey) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
