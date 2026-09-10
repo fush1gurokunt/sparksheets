@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -499,12 +499,15 @@
       overflow: hidden;
       --stage-a: var(--gray-50);
       --stage-b: var(--gray-50);
+      --stage-accent: #7c3aed;
+      --stage-tint: var(--gray-100);
+      --stage-border: var(--gray-200);
     }
 
-    .worksheet-paper.ws-stage-fs  { --stage-a: #FF7A50; --stage-b: #E8622F; }
-    .worksheet-paper.ws-stage-ks1 { --stage-a: #2FBF8F; --stage-b: #1E9C71; }
-    .worksheet-paper.ws-stage-ks2 { --stage-a: #4C6FE0; --stage-b: #3A54BE; }
-    .worksheet-paper.ws-stage-p7  { --stage-a: #8B5FBF; --stage-b: #6E439E; }
+    .worksheet-paper.ws-stage-fs  { --stage-a: #FF7A50; --stage-b: #E8622F; --stage-accent: #1FAFA0; --stage-tint: #E4F8F5; --stage-border: #FFE1CE; }
+    .worksheet-paper.ws-stage-ks1 { --stage-a: #2FBF8F; --stage-b: #1E9C71; --stage-accent: #FF9F5A; --stage-tint: #E8F9F1; --stage-border: #D9F2E6; }
+    .worksheet-paper.ws-stage-ks2 { --stage-a: #4C6FE0; --stage-b: #3A54BE; --stage-accent: #FF9F5A; --stage-tint: #EAEEFD; --stage-border: #DCE3FB; }
+    .worksheet-paper.ws-stage-p7  { --stage-a: #8B5FBF; --stage-b: #6E439E; --stage-accent: #FFC94A; --stage-tint: #F1EBF9; --stage-border: #E8DEF4; }
 
     .worksheet-paper-header {
       padding: 1.5rem 2rem;
@@ -527,12 +530,43 @@
     }
 
     .ws-brand-name {
-      font-family: var(--font-ui);
-      font-size: 0.72rem;
+      font-family: 'Baloo 2', var(--font-ui);
+      font-size: 0.8rem;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.85);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
+      color: rgba(255, 255, 255, 0.92);
+      letter-spacing: 0.01em;
+    }
+
+    .ws-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ws-worksheet-title {
+      font-family: 'Baloo 2', var(--font-ui);
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .ws-instruction-pill {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.18);
+      display: inline-block;
+      padding: 0.32rem 0.9rem;
+      border-radius: 999px;
+      white-space: nowrap;
     }
 
     .ws-fields {
@@ -1150,6 +1184,23 @@
       gap: 0.5rem;
       min-height: 170px;
       background: #fff;
+      position: relative;
+    }
+
+    .ws-fs-cell-badge {
+      position: absolute;
+      top: -10px;
+      left: 14px;
+      background: var(--stage-accent, #7c3aed);
+      color: white;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.68rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      line-height: 1.3;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     /* ── FS WORD DISPLAY (phonics) ─────────────────────── */
@@ -1277,14 +1328,20 @@
 
     /* ── FS IMAGE SLOTS ────────────────────────────────── */
     .ws-fs-img-slot {
-      width: 140px;
-      height: 140px;
+      width: 156px;
+      height: 156px;
+      padding: 8px;
+      box-sizing: border-box;
+      background: var(--stage-tint, #f3f4f6);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       overflow: hidden;
       position: relative;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .ws-fs-img-slot .ws-fs-img-loading {
       width: 140px;
@@ -1314,6 +1371,27 @@
       font-size: 0.78rem;
       color: #9ca3af;
       margin: 0 0 0.6rem;
+    }
+
+    /* ── WORKSHEET FOOTER STRIP ────────────────────────── */
+    .ws-footer-strip {
+      display: flex;
+      align-items: center;
+      margin-top: 1.75rem;
+      padding-top: 1.1rem;
+      border-top: 2px dashed var(--stage-border, var(--gray-200));
+    }
+    .ws-footer-tag {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--stage-accent, var(--gray-500));
+      background: var(--stage-tint, var(--gray-100));
+      border: 1px solid var(--stage-border, var(--gray-200));
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     /* ── STREAMING CURSOR ─────────────────────────────── */
@@ -1648,6 +1726,14 @@
       }
 
       .ws-brand-name { color: #555; }
+
+      .ws-title-row { margin-top: 6pt; }
+      .ws-worksheet-title { color: #1a1a1a; }
+      .ws-instruction-pill {
+        color: #333;
+        background: white;
+        border: 0.75pt solid #999;
+      }
 
       .ws-fields { gap: 3.5cm; }
       .ws-field-line { background: #555; }
@@ -2263,6 +2349,10 @@
           <div class="ws-field-line"></div>
         </div>
       </div>
+      <div class="ws-title-row" id="ws-title-row" hidden>
+        <h1 class="ws-worksheet-title" id="ws-worksheet-title"></h1>
+        <div class="ws-instruction-pill" id="ws-instruction-pill" hidden></div>
+      </div>
     </div>
 
     <!-- Loading skeleton -->
@@ -2476,10 +2566,18 @@
     if (!item) return;
     const outputSection = document.getElementById('output-section');
     const outputEl      = document.getElementById('output');
+    const paper         = document.getElementById('worksheet-paper');
     document.getElementById('gen-loading').classList.remove('active');
     outputSection.style.display = 'block';
     outputEl.classList.remove('streaming');
+    applyTheme('');
+    applyStageTheme(item.yearGroup);
+    const isFS = item.text.includes('[FS]') || /\[FS_(?:WORD|COUNT)_GRID:/.test(item.text);
+    outputEl.classList.toggle('ws-fs', isFS);
+    paper.classList.toggle('ws-fs', isFS);
     outputEl.innerHTML = markdownToHtml(item.text);
+    syncHeaderTitle();
+    syncFooterStrip(item.subject, item.yearGroup);
     document.getElementById('print-btn-big').classList.add('show');
     outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -2593,8 +2691,16 @@
 
   // ── Example chips ─────────────────────────────────────────────
   function setExample(chip) {
-    document.getElementById('prompt').value = chip.textContent.trim();
+    const text = chip.textContent.trim();
+    document.getElementById('prompt').value = text;
     document.getElementById('prompt').focus();
+
+    const pMatch = text.match(/^P([1-7])\b/);
+    if (pMatch) {
+      const ygEl = document.getElementById('year-group');
+      const opt = [...ygEl.options].find(o => o.value.startsWith(`P${pMatch[1]}`));
+      if (opt) ygEl.value = opt.value;
+    }
   }
 
   // ── Friendly error messages ───────────────────────────────────
@@ -2852,6 +2958,59 @@
     paper.classList.add(getStageClass(yearGroup));
   }
 
+  // ── Header title/instruction sync ───────────────────────────────
+  // Moves the worksheet's own <h1> (and, for Foundation Stage, its short
+  // child-facing instruction line) out of the flowing #output content and
+  // into the coloured header band, mirroring the redesign mockup.
+  function syncHeaderTitle() {
+    const outputEl = document.getElementById('output');
+    const titleRow  = document.getElementById('ws-title-row');
+    const titleEl   = document.getElementById('ws-worksheet-title');
+    const pillEl    = document.getElementById('ws-instruction-pill');
+    if (!outputEl || !titleRow || !titleEl || !pillEl) return;
+
+    const h1 = outputEl.querySelector('h1');
+    if (!h1) { titleRow.hidden = true; return; }
+
+    titleEl.textContent = h1.textContent;
+    h1.style.display = 'none';
+    titleRow.hidden = false;
+
+    // The instruction line is a plain paragraph directly after the title
+    // (no bold meta fields inside it) — that shape is unique to Foundation
+    // Stage worksheets, whose next line is never a **Area of Learning:** etc.
+    const p = h1.nextElementSibling;
+    if (p && p.tagName === 'P' && !p.querySelector('strong')) {
+      pillEl.textContent = p.textContent;
+      p.style.display = 'none';
+      pillEl.hidden = false;
+    } else {
+      pillEl.hidden = true;
+    }
+  }
+
+  // ── Footer strip (subject / stage tag) ───────────────────────────
+  function syncFooterStrip(subject, yearGroup) {
+    const outputEl = document.getElementById('output');
+    if (!outputEl) return;
+    const existing = outputEl.querySelector('.ws-footer-strip');
+    if (existing) existing.remove();
+
+    const parts = [subject, yearGroup].filter(Boolean);
+    if (!parts.length) return;
+
+    const footer = document.createElement('div');
+    footer.className = 'ws-footer-strip';
+    footer.innerHTML = `<span class="ws-footer-tag">${parts.join(' · ')}</span>`;
+
+    const answerKey = outputEl.querySelector('.ws-answer-key-page');
+    if (answerKey) {
+      answerKey.parentNode.insertBefore(footer, answerKey);
+    } else {
+      outputEl.appendChild(footer);
+    }
+  }
+
   async function generateDalleImage(prompt) {
     const resp = await fetch('/api/generate-image', {
       method: 'POST',
@@ -3101,7 +3260,7 @@
         // imageMap not yet available — render pulsing placeholder slot for later injection
         imgContent = `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`;
       }
-      return `<div class="ws-fs-grid-item">${imgContent}<div class="ws-fs-word">${rendered}</div></div>`;
+      return `<div class="ws-fs-grid-item"><div class="ws-fs-cell-badge">${i + 1}</div>${imgContent}<div class="ws-fs-word">${rendered}</div></div>`;
     }).join('');
     return `<div class="ws-fs-grid">${items}</div>`;
   }
@@ -3128,7 +3287,7 @@
         imgContent = `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`;
       }
       const fallbackCls = imgContent ? ' ws-fs-count-fallback' : '';
-      return `<div class="ws-fs-grid-item${hasImgClass}">${imgContent}<div class="${fallbackCls.trim()}">${svgHtml}</div><span class="write-box"></span></div>`;
+      return `<div class="ws-fs-grid-item${hasImgClass}"><div class="ws-fs-cell-badge">${i + 1}</div>${imgContent}<div class="${fallbackCls.trim()}">${svgHtml}</div><span class="write-box"></span></div>`;
     }).join('');
     return `<div class="ws-fs-grid">${items}</div>`;
   }
@@ -3434,6 +3593,8 @@
     outputEl.classList.remove('ws-fs');
     document.getElementById('worksheet-paper').classList.remove('ws-fs');
     injectHeaderIcon(subject);
+    document.getElementById('ws-title-row').hidden = true;
+    document.getElementById('ws-instruction-pill').hidden = true;
     outputSection.style.display = 'block';
     outputEl.innerHTML = '';
     outputEl.classList.remove('streaming');
@@ -3763,6 +3924,7 @@ Reference Thinking Skills and Personal Capabilities where relevant. Keep languag
               }
               fullText += event.delta.text;
               outputEl.innerHTML = markdownToHtml(fullText);
+              syncHeaderTitle();
             }
           } catch (_) {}
         }
@@ -3794,12 +3956,14 @@ Reference Thinking Skills and Personal Capabilities where relevant. Keep languag
         if (wsImgWords.length) {
           if (isFS) {
             outputEl.innerHTML = markdownToHtml(fullText, null);
+            syncHeaderTitle();
             injectFSImages(wsImgWords, yearGroup, imgTopic);
           } else {
             injectWSImages(wsImgWords, yearGroup, imgTopic);
           }
         }
       }
+      syncFooterStrip(subject, yearGroup);
       saveHistory(fullText, yearGroup, subject, currentStyle);
       incrementUsage();
       printBtn.classList.add('show');
