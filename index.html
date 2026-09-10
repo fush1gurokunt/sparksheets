@@ -2865,6 +2865,7 @@
       const slot = document.getElementById(`fsimg-${i}`);
       if (!slot) return;
       slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
+            await new Promise(r => setTimeout(r, i * 600));
       const prompt = buildDallePrompt(word, yearGroup, topic);
       let src = null;
       try {
@@ -2923,6 +2924,7 @@
     await Promise.all(imgWords.map(async (word, i) => {
       const slot = document.getElementById(`wsimg-${i}`);
       if (!slot) return;
+            await new Promise(r => setTimeout(r, i * 600));
       try {
         const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
         const fe = phonicsEmoji(word);
