@@ -497,11 +497,18 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-xl);
       overflow: hidden;
+      --stage-a: var(--gray-50);
+      --stage-b: var(--gray-50);
     }
+
+    .worksheet-paper.ws-stage-fs  { --stage-a: #FF7A50; --stage-b: #E8622F; }
+    .worksheet-paper.ws-stage-ks1 { --stage-a: #2FBF8F; --stage-b: #1E9C71; }
+    .worksheet-paper.ws-stage-ks2 { --stage-a: #4C6FE0; --stage-b: #3A54BE; }
+    .worksheet-paper.ws-stage-p7  { --stage-a: #8B5FBF; --stage-b: #6E439E; }
 
     .worksheet-paper-header {
       padding: 1.5rem 2rem;
-      background: var(--gray-50);
+      background: linear-gradient(135deg, var(--stage-a), var(--stage-b));
       border-bottom: 1.5px solid var(--gray-100);
     }
 
@@ -523,7 +530,7 @@
       font-family: var(--font-ui);
       font-size: 0.72rem;
       font-weight: 700;
-      color: var(--gray-400);
+      color: rgba(255, 255, 255, 0.85);
       text-transform: uppercase;
       letter-spacing: 0.07em;
     }
@@ -546,13 +553,13 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.07em;
-      color: var(--gray-400);
+      color: rgba(255, 255, 255, 0.8);
     }
 
     .ws-field-line {
       width: 180px;
       height: 1px;
-      background: var(--gray-300);
+      background: rgba(255, 255, 255, 0.55);
     }
 
     .ws-field.short .ws-field-line { width: 110px; }
@@ -1639,6 +1646,8 @@
         border-bottom: 2pt solid #333;
         padding: 0 0 10pt 0;
       }
+
+      .ws-brand-name { color: #555; }
 
       .ws-fields { gap: 3.5cm; }
       .ws-field-line { background: #555; }
@@ -2828,6 +2837,21 @@
     return 'ks1'; // P3/P4 and anything else
   }
 
+  function getStageClass(yearGroup) {
+    const yg = (yearGroup || '').toLowerCase();
+    if (yg.includes('p7')) return 'ws-stage-p7';
+    if (yg.includes('p5') || yg.includes('p6')) return 'ws-stage-ks2';
+    if (yg.includes('p3') || yg.includes('p4')) return 'ws-stage-ks1';
+    return 'ws-stage-fs'; // P1/P2 and anything else
+  }
+
+  function applyStageTheme(yearGroup) {
+    const paper = document.getElementById('worksheet-paper');
+    if (!paper) return;
+    paper.className = paper.className.replace(/\bws-stage-\w+\b/g, '').trim();
+    paper.classList.add(getStageClass(yearGroup));
+  }
+
   async function generateDalleImage(prompt) {
     const resp = await fetch('/api/generate-image', {
       method: 'POST',
@@ -3406,6 +3430,7 @@
 
     printBtn.classList.remove('show');
     applyTheme('');
+    applyStageTheme(yearGroup);
     outputEl.classList.remove('ws-fs');
     document.getElementById('worksheet-paper').classList.remove('ws-fs');
     injectHeaderIcon(subject);
