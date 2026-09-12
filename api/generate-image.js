@@ -18,6 +18,9 @@ module.exports = async (req, res) => {
   const model = 'gemini-3.1-flash-image';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
   let upstream;
   try {
     upstream = await fetch(url, {
@@ -26,9 +29,15 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
       }),
+      signal: controller.signal,
     });
   } catch (err) {
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'Gemini API request timed out' });
+    }
     return res.status(502).json({ error: 'Failed to reach Gemini API' });
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   if (!upstream.ok) {

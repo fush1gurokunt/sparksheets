@@ -2580,6 +2580,21 @@
     syncFooterStrip(item.subject, item.yearGroup);
     document.getElementById('print-btn-big').classList.add('show');
     outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Re-run image injection so any pending FS/WS image slots in this
+    // reopened resource actually resolve instead of spinning forever
+    const wsImgWordsMatch = item.text.match(/\[(?:WS|FS)_IMGWORDS:([^\]]+)\]/);
+    if (wsImgWordsMatch) {
+      const wsImgWords = wsImgWordsMatch[1].split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
+      const imgTopic = item.subject || '';
+      if (wsImgWords.length) {
+        if (isFS) {
+          injectFSImages(wsImgWords, item.yearGroup, imgTopic);
+        } else {
+          injectWSImages(wsImgWords, item.yearGroup, imgTopic);
+        }
+      }
+    }
   }
 
   renderHistory();
@@ -3019,7 +3034,9 @@
     });
     if (!resp.ok) {
       const errText = await resp.text().catch(() => '');
-      throw new Error(`Image API HTTP ${resp.status}: ${errText.slice(0, 200)}`);
+      const err = new Error(`Image API HTTP ${resp.status}: ${errText.slice(0, 200)}`);
+      err.status = resp.status;
+      throw err;
     }
     const data = await resp.json();
     const entry = data.data[0];
@@ -3032,6 +3049,30 @@
       return `data:image/png;base64,${entry.b64_json}`;
     }
     throw new Error('Image response had neither url nor b64_json');
+  }
+
+  const RETRYABLE_IMG_STATUSES = new Set([429, 502, 503, 504]);
+
+  // Generate an image with one retry (~1s backoff) on transient failures
+  // (429/502/503/504). Config/auth errors (and anything else) fail fast —
+  // retrying wouldn't help, so we go straight to the caller's fallback.
+  async function generateDalleImageWithRetry(prompt, label) {
+    try {
+      return await generateDalleImage(prompt);
+    } catch (e) {
+      if (!RETRYABLE_IMG_STATUSES.has(e.status)) {
+        console.warn(`Image failed for "${label}" (non-retryable${e.status ? `, HTTP ${e.status}` : ''}):`, e);
+        return null;
+      }
+      console.warn(`Image failed for "${label}" (HTTP ${e.status}), retrying in 1s…`, e);
+      await new Promise(r => setTimeout(r, 1000));
+      try {
+        return await generateDalleImage(prompt);
+      } catch (e2) {
+        console.warn(`Image failed for "${label}" after retry:`, e2);
+        return null;
+      }
+    }
   }
 
   // Foundation Stage: inject images into pre-created grid item slots
@@ -3050,18 +3091,7 @@
       slot.innerHTML = '<div class="ws-fs-img-loading"></div>';
             await new Promise(r => setTimeout(r, i * 600));
       const prompt = buildDallePrompt(word, yearGroup, topic);
-      let src = null;
-      try {
-        src = await generateDalleImage(prompt);
-      } catch (e) {
-        console.warn(`FS image failed for "${word}", retrying in 1s…`, e);
-        await new Promise(r => setTimeout(r, 1000));
-        try {
-          src = await generateDalleImage(prompt);
-        } catch (e2) {
-          console.warn(`FS image failed for "${word}" after retry:`, e2);
-        }
-      }
+      const src = await generateDalleImageWithRetry(prompt, word);
       if (src) {
         slot.innerHTML = `<img src="${src}" class="ws-fs-img" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div>`;
         const parent = slot.closest('.ws-fs-grid-item');
@@ -3108,14 +3138,12 @@
       const slot = document.getElementById(`wsimg-${i}`);
       if (!slot) return;
             await new Promise(r => setTimeout(r, i * 600));
-      try {
-        const src = await generateDalleImage(buildDallePrompt(word, yearGroup, topic));
+      const src = await generateDalleImageWithRetry(buildDallePrompt(word, yearGroup, topic), word);
+      const emojiSize = sizeClass === 'p7' ? '1.3rem' : sizeClass === 'ks2' ? '1.7rem' : '2rem';
+      if (src) {
         const fe = phonicsEmoji(word);
-        const emojiSize = sizeClass === 'p7' ? '1.3rem' : sizeClass === 'ks2' ? '1.7rem' : '2rem';
         slot.innerHTML = `<img src="${src}" class="ws-img ws-img-${sizeClass}" alt="${word}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;font-size:${emojiSize};line-height:1;align-items:center;justify-content:center;width:100%;height:100%">${fe}</div>`;
-      } catch (e) {
-        console.warn(`WS image failed for "${word}":`, e);
-        const emojiSize = sizeClass === 'p7' ? '1.3rem' : sizeClass === 'ks2' ? '1.7rem' : '2rem';
+      } else {
         slot.innerHTML = `<span style="font-size:${emojiSize};line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%">🖼️</span>`;
       }
     }));
@@ -3231,34 +3259,16 @@
     function makeEmojiCell() {
       return `<div class="ws-fs-img-slot"><div style="display:flex;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
     }
-    function makeTextCell(label) {
-      // Absolute last resort: bordered box with word text — never an empty box
-      return `<div class="ws-fs-img-slot"><div style="width:140px;height:140px;border:2.5px solid #1f2937;` +
-        `border-radius:4px;display:flex;align-items:center;justify-content:center;padding:4px">` +
-        `<span style="font-size:1.1rem;font-weight:bold;color:#1f2937;text-align:center;line-height:1.2">` +
-        `${label}</span></div></div>`;
-    }
     const items = words.map((word, i) => {
       const rendered = word.replace(/_{2,}/g, () => '<span class="ws-fs-blank"></span>');
       let imgContent = '';
-      if (imageMap !== null) {
-        if (i < imgWords.length) {
-          const src = imageMap[imgWords[i]];
-          if (src && src.startsWith('html:')) {
-            imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
-          } else if (src) {
-            imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
-          } else {
-            imgContent = makeEmojiCell();
-          }
-        } else {
-          imgContent = makeEmojiCell();
-        }
-        // Absolute last resort — should never trigger, but guarantees no empty box
-        if (!imgContent) imgContent = makeTextCell(imgWords[i] || word.replace(/_/g, '').trim() || '?');
-      } else if (imgWords.length > 0 && i < imgWords.length) {
-        // imageMap not yet available — render pulsing placeholder slot for later injection
-        imgContent = `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`;
+      if (imgWords.length > 0) {
+        // Cells within imgWords get a placeholder slot for later injection;
+        // any extra cells beyond imgWords.length will never be injected, so
+        // give them an immediate fallback rather than leaving them empty.
+        imgContent = i < imgWords.length
+          ? `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`
+          : makeEmojiCell();
       }
       return `<div class="ws-fs-grid-item"><div class="ws-fs-cell-badge">${i + 1}</div>${imgContent}<div class="ws-fs-word">${rendered}</div></div>`;
     }).join('');
@@ -3271,23 +3281,16 @@
       const [shape, count] = item.trim().split(':');
       const svgHtml = fsCountShapes(shape || 'circle', count || '3');
       let imgContent = '';
-      let hasImgClass = '';
-      if (imageMap !== null && i < imgWords.length) {
-        const src = imageMap[imgWords[i]];
-        if (src && src.startsWith('html:')) {
-          imgContent = `<div class="ws-fs-img-slot">${src.slice(5)}</div>`;
-          hasImgClass = ' has-img';
-        } else if (src) {
-          imgContent = `<div class="ws-fs-img-slot"><img src="${src}" class="ws-fs-img" alt="${imgWords[i]}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div style="display:none;width:140px;height:140px;align-items:center;justify-content:center">${fsFallbackSvg()}</div></div>`;
-          hasImgClass = ' has-img';
-        } else {
-          imgContent = emojiCell;
-        }
-      } else if (imageMap === null && imgWords.length > 0 && i < imgWords.length) {
-        imgContent = `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`;
+      if (imgWords.length > 0) {
+        // Cells within imgWords get a placeholder slot for later injection;
+        // any extra cells beyond imgWords.length will never be injected, so
+        // give them an immediate fallback rather than leaving them empty.
+        imgContent = i < imgWords.length
+          ? `<div class="ws-fs-img-slot" id="fsimg-${i}"><div class="ws-fs-img-loading"></div></div>`
+          : emojiCell;
       }
       const fallbackCls = imgContent ? ' ws-fs-count-fallback' : '';
-      return `<div class="ws-fs-grid-item${hasImgClass}"><div class="ws-fs-cell-badge">${i + 1}</div>${imgContent}<div class="${fallbackCls.trim()}">${svgHtml}</div><span class="write-box"></span></div>`;
+      return `<div class="ws-fs-grid-item"><div class="ws-fs-cell-badge">${i + 1}</div>${imgContent}<div class="${fallbackCls.trim()}">${svgHtml}</div><span class="write-box"></span></div>`;
     }).join('');
     return `<div class="ws-fs-grid">${items}</div>`;
   }
